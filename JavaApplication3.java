@@ -40,24 +40,43 @@ class Grid extends JPanel implements KeyListener {
          case KeyEvent.VK_LEFT:
             charposcol--;
             System.out.println("VK_LEFT pressed");
+            if (!chkValidity())
+                charposcol++;
             break;
          case KeyEvent.VK_RIGHT:
             charposcol++;
             System.out.println("VK_RIGHT pressed");
+            if (!chkValidity())
+                charposcol--;
             break;
          case KeyEvent.VK_UP:
             charposrow--;
             System.out.println("VK_UP pressed");
+            if (!chkValidity())
+                charposrow++;
             break;
          case KeyEvent.VK_DOWN:
             charposrow++;
-            System.out.println("VK_DOWN pressed");
+            System.out.println("VK_DOWN pressed"+charposrow);
+            if (!chkValidity())
+                charposrow--;
             break;
          }
-         if(map[charposcol][charposrow]==0) JOptionPane.showMessageDialog(null, "BooHoo. You're dead sucker.");
          map[charposcol][charposrow]=2;
          repaint();
       }
+    
+    boolean chkValidity()
+    {
+        try {
+            if(map[charposcol][charposrow]==0) 
+            {    JOptionPane.showMessageDialog(null, "BooHoo. You're dead sucker.");
+                return false;
+            }
+            } catch(Exception E)
+            {return false; }
+            return !(charposrow == 146 || charposcol == 270);
+    }
     
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -192,6 +211,4 @@ static JFrame window = new JFrame();
             Thread.sleep(200);
         }
     }
-
-
 }
