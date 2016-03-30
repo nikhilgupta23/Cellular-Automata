@@ -1,0 +1,48 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package JavaApplication3;
+
+import java.util.Arrays;
+
+/**
+ *
+ * @author student
+ */
+public class Floodfill {
+    public static void main(String Args[])
+    {
+        short[][] arr = {{0,0,1,1,1},
+                         {1,0,0,0,1},
+                         {0,1,1,1,1},
+                         {0,0,1,0,1},
+                         {1,0,1,0,0}};
+        fillGrid(arr, (short)4, (short)4);
+        System.out.println(Arrays.deepToString(arr));
+    }
+    
+    static void fillGrid(short[][] arr, short r, short c) 
+
+    {
+        if (r < 0 || c < 0 || r > 4 || c > 4)
+            return;
+        
+        if (arr[r][c] == 0)
+
+        {
+
+            arr[r][c] = 10;
+
+            fillGrid(arr, (short)(r + 1), c);
+
+            fillGrid(arr, (short)(r - 1), c);
+
+            fillGrid(arr, r, (short)(c + 1));
+
+            fillGrid(arr, r, (short)(c - 1));
+
+        }
+    }
+}
