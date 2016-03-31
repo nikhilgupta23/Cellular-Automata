@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package javaapplication3;
-
+package se;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -13,8 +7,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
-import static javaapplication3.Grid.charposcol;
-import static javaapplication3.Grid.charposrow;
+import java.util.LinkedList;
+import java.util.Stack;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -86,37 +81,35 @@ class Grid extends JPanel implements KeyListener {
     @Override
     public void paint(Graphics g) { 
         int i;
-        for (i = 0; i < 3000; i+=10)
+        for (i = 0; i < 2690; i+=10)
         {
-            for (int j = 0; j < 3000; j +=10)
+            for (int j = 0; j < 1450; j +=10)
             {
                 
                 if (map[i/10][j/10] == 1)
                     g.setColor(Color.white);
                 else if(map[i/10][j/10] == 0)
                     g.setColor(Color.black);
-                else
+                else if(map[i/10][j/10] == 10)
                     g.setColor(Color.red);
+                else
+                    g.setColor(Color.blue);
                 g.fillRect(i/2, j/2, 5, 5);  
             }
         }
         
     }
 }
-/**
- *
- * @author Nikhil Gupta
- */
-public class JavaApplication3 {
+
+class JavaApplication3 {
 
     /**
      * @param args the command line arguments
      */
     
-static int width=300,height=300;                                   /////////////////////////////////
-short[][] cellmap = new short[width][height];
+static int width=269,height=145;                                   /////////////////////////////////
 
-static float chanceToStartAlive = 0.50f;                           //////////////////////////////////
+static float chanceToStartAlive = 0.46f;                           //////////////////////////////////
  
 public static short[][] initialiseMap(short[][] map){
     for(int x=0; x<width; x++){
@@ -126,7 +119,7 @@ public static short[][] initialiseMap(short[][] map){
             }
         }
     }
-     map[0][0]=2;
+    // map[0][0]=2;
     return map;
 }
 
@@ -210,5 +203,74 @@ static JFrame window = new JFrame();
             window.repaint();
             Thread.sleep(200);
         }
+        short chkmap[][] = new short[width][height];
+        chkmap = map;
+        boolean valid = fillGridOI(chkmap, pq, 224, 123);
+        pq.map = map;
+        window.repaint();
+        Thread.sleep(200);
+    }
+    
+    static boolean fillGridOI(short[][] arr, Grid pq, int r, int c) 
+    {
+        Stack<Floodfill.Sh2> Q = new Stack<>();
+        //Sh2 M[] = new Sh2[269];
+        short i = 0;
+        //moving rowwise
+        while (i >= 0 && i < 269)
+        {
+            if (arr[i][0] == 1)     //0 means travellable
+            {
+                Floodfill.Sh2 S = new Floodfill.Sh2(i,(short)0);
+                Q.push(S);
+            }
+            else 
+                break;
+            i++;
+        }
+        Floodfill.Sh2 S1;
+        
+        while (!Q.isEmpty())
+        {
+            S1 = Q.pop();
+            arr[S1.n1][S1.n2] = 10;
+            
+            System.out.println(S1.n1+" "+S1.n2);
+            try {
+            if (arr[S1.n1][S1.n2+1] == 1)
+            {
+                Floodfill.Sh2 S2 = new Floodfill.Sh2(S1.n1, (short)(S1.n2+1));
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }
+            } catch (ArrayIndexOutOfBoundsException E) {}
+            try {
+            if (arr[S1.n1][S1.n2-1] == 1)
+            {
+                Floodfill.Sh2 S2 = new Floodfill.Sh2(S1.n1, (short)(S1.n2-1));
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }} catch (ArrayIndexOutOfBoundsException E) {}
+            try {
+            if (arr[S1.n1+1][S1.n2] == 1)
+            {
+                Floodfill.Sh2 S2 = new Floodfill.Sh2((short)(S1.n1+1), S1.n2);
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+                pq.map = arr;
+                window.repaint();
+            }
+            } catch (ArrayIndexOutOfBoundsException E) {}
+            try {
+            if (arr[S1.n1-1][S1.n2] == 1)
+            {
+                Floodfill.Sh2 S2 = new Floodfill.Sh2((short)(S1.n1-1), S1.n2);
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }
+            } catch (ArrayIndexOutOfBoundsException E) {}
+        }
+        return (arr[0][0] == arr[r][c]);
     }
 }
+    
