@@ -1,4 +1,9 @@
-package se;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -189,7 +194,6 @@ static JFrame window = new JFrame();
     public static void main(String[] args) throws InterruptedException {
         
         map=initialiseMap(map);
-        
         window.setSize(1366,768);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Grid pq=new Grid(map);
@@ -205,15 +209,25 @@ static JFrame window = new JFrame();
         }
         short chkmap[][] = new short[width][height];
         chkmap = map;
-        boolean valid = fillGridOI(chkmap, pq, 224, 123);
+        fillGridOI(chkmap, pq);
         pq.map = map;
         window.repaint();
         Thread.sleep(200);
     }
     
-    static boolean fillGridOI(short[][] arr, Grid pq, int r, int c) 
+    static class Sh2
     {
-        Stack<Floodfill.Sh2> Q = new Stack<>();
+        short n1, n2;
+        Sh2(short num1, short num2)
+        {
+            n1 = num1;
+            n2 = num2;
+        }
+    }
+    
+    static void fillGridOI(short[][] arr, Grid pq) 
+    {
+        Stack<Sh2> Q = new Stack<>();
         //Sh2 M[] = new Sh2[269];
         short i = 0;
         //moving rowwise
@@ -221,14 +235,14 @@ static JFrame window = new JFrame();
         {
             if (arr[i][0] == 1)     //0 means travellable
             {
-                Floodfill.Sh2 S = new Floodfill.Sh2(i,(short)0);
+                Sh2 S = new Sh2(i,(short)0);
                 Q.push(S);
             }
             else 
                 break;
             i++;
         }
-        Floodfill.Sh2 S1;
+        Sh2 S1;
         
         while (!Q.isEmpty())
         {
@@ -239,7 +253,7 @@ static JFrame window = new JFrame();
             try {
             if (arr[S1.n1][S1.n2+1] == 1)
             {
-                Floodfill.Sh2 S2 = new Floodfill.Sh2(S1.n1, (short)(S1.n2+1));
+                Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2+1));
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
             }
@@ -247,14 +261,14 @@ static JFrame window = new JFrame();
             try {
             if (arr[S1.n1][S1.n2-1] == 1)
             {
-                Floodfill.Sh2 S2 = new Floodfill.Sh2(S1.n1, (short)(S1.n2-1));
+                Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2-1));
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
             }} catch (ArrayIndexOutOfBoundsException E) {}
             try {
             if (arr[S1.n1+1][S1.n2] == 1)
             {
-                Floodfill.Sh2 S2 = new Floodfill.Sh2((short)(S1.n1+1), S1.n2);
+                Sh2 S2 = new Sh2((short)(S1.n1+1), S1.n2);
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
                 pq.map = arr;
@@ -264,13 +278,12 @@ static JFrame window = new JFrame();
             try {
             if (arr[S1.n1-1][S1.n2] == 1)
             {
-                Floodfill.Sh2 S2 = new Floodfill.Sh2((short)(S1.n1-1), S1.n2);
+                Sh2 S2 = new Sh2((short)(S1.n1-1), S1.n2);
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
         }
-        return (arr[0][0] == arr[r][c]);
     }
 }
     
