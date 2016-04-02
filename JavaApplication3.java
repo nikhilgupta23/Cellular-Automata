@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+package javaapplication27;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,8 @@ import java.awt.event.KeyListener;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,40 +34,103 @@ class Grid extends JPanel implements KeyListener {
       this.requestFocus();
       this.addKeyListener(this);
     }
-    
+    int lastKeyPress;
     @Override
       public void keyPressed(KeyEvent e) {
-          map[charposcol][charposrow]=1;
-         switch (e.getKeyCode()) {
-         case KeyEvent.VK_LEFT:
-            charposcol--;
-            System.out.println("VK_LEFT pressed");
-            if (!chkValidity())
-                charposcol++;
-            break;
-         case KeyEvent.VK_RIGHT:
-            charposcol++;
-            System.out.println("VK_RIGHT pressed");
-            if (!chkValidity())
-                charposcol--;
-            break;
-         case KeyEvent.VK_UP:
-            charposrow--;
-            System.out.println("VK_UP pressed");
-            if (!chkValidity())
-                charposrow++;
-            break;
-         case KeyEvent.VK_DOWN:
-            charposrow++;
-            System.out.println("VK_DOWN pressed"+charposrow);
-            if (!chkValidity())
-                charposrow--;
-            break;
-         }
-         map[charposcol][charposrow]=2;
-         repaint();
+        try {
+            map[charposcol][charposrow]=1;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    charposcol--;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_LEFT pressed");
+                    if (!chkValidity())
+                        charposcol++;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    charposcol++;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_RIGHT pressed");
+                    if (!chkValidity())
+                        charposcol--;
+                    break;
+                case KeyEvent.VK_UP:
+                    charposrow--;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_UP pressed");
+                    if (!chkValidity())
+                        charposrow++;
+                    break;
+                case KeyEvent.VK_DOWN:
+                    charposrow++;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_DOWN pressed"+charposrow);
+                    if (!chkValidity())
+                        charposrow--;
+                    break;
+                case KeyEvent.VK_S:
+                    Shoot();
+                    break;
+            }
+            map[charposcol][charposrow]=2;
+            repaint();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Grid.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
-    
+    void Shoot() throws InterruptedException
+    {
+        try {
+        switch(lastKeyPress)
+        {
+            case KeyEvent.VK_LEFT:
+                map[charposcol-2][charposrow] = 15;
+                repaint();
+                Thread.sleep(1000);
+                Propagate(0);
+                break;
+            case KeyEvent.VK_RIGHT:
+                map[charposcol+2][charposrow] = 15;
+                break;
+            case KeyEvent.VK_DOWN:
+                map[charposcol][charposrow+2] = 15;
+                break;
+            case KeyEvent.VK_UP:
+                map[charposcol][charposrow-2] = 15;
+                break;
+        }
+        } catch (ArrayIndexOutOfBoundsException E) {return;}
+        
+    }
+    //3-up, 1-down, 2-right, 0-left
+    void Propagate(int dir) throws InterruptedException
+    {
+        int i = charposcol;
+        int j = charposrow;
+        try
+        {
+        switch(dir)
+        {
+            case 0:
+                i -= 2;
+                for (;map[i-2][j] != 0;)
+                {   map[i][j] = 1;
+                    i -= 2;
+                    map[i][j] = 15;
+                    repaint();
+                    Thread.sleep(1000);
+                }
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
+        } catch (ArrayIndexOutOfBoundsException E) {return;}
+    }
+      
     boolean chkValidity()
     {
         try {
@@ -92,14 +157,18 @@ class Grid extends JPanel implements KeyListener {
             {
                 
                 if (map[i/10][j/10] == 1)
-                    g.setColor(Color.white);
+                    g.setColor(Color.lightGray);
                 else if(map[i/10][j/10] == 0)
                     g.setColor(Color.black);
                 else if(map[i/10][j/10] == 10)
                     g.setColor(Color.red);
+                else if(map[i/10][j/10] == 5)
+                    g.setColor(Color.yellow);
+                else if(map[i/10][j/10] == 15)
+                    g.setColor(Color.RED);
                 else
-                    g.setColor(Color.blue);
-                g.fillRect(i/2, j/2, 5, 5);  
+                    g.setColor(Color.white);
+                g.fillRect(i, j, 10, 10);  
             }
         }
         
@@ -190,13 +259,37 @@ public static short[][] generateMap(short map[][])
 
 
 static short map[][] = new short[width][height];
+static short chkmap[][] = new short[width][height];
 static JFrame window = new JFrame();
+static Grid pq;
     public static void main(String[] args) throws InterruptedException {
-        
+        initialScreen();
+        placeTreasure();
+        pq.map = map;
+        window.repaint();
+    }
+    
+    static void placeTreasure(){
+    //How hidden does a spot need to be for treasure?
+    //I find 5 or 6 is good. 6 for very rare treasure.
+    int treasureHiddenLimit = 5;
+    for (int x=0; x < width; x++){
+        for (int y=0; y < height; y++){
+            if(map[x][y] == 0){
+                int nbs = countAliveNeighbours(map, x, y);
+                if(nbs >= treasureHiddenLimit){
+                    map[x][y] = 5;
+                }
+            }
+        }
+    }
+}
+    static void initialScreen() throws InterruptedException
+    {
         map=initialiseMap(map);
         window.setSize(1366,768);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Grid pq=new Grid(map);
+        pq = new Grid(map);
         window.add(pq);
         window.setVisible(true);
         
@@ -207,9 +300,10 @@ static JFrame window = new JFrame();
             window.repaint();
             Thread.sleep(200);
         }
-        short chkmap[][] = new short[width][height];
-        chkmap = map;
-        fillGridOI(chkmap, pq);
+        for (int i = 0; i < width; i++)
+            System.arraycopy(map[i], 0, chkmap[i], 0, height);
+        fillGridOI();
+        Thread.sleep(500);
         pq.map = map;
         window.repaint();
         Thread.sleep(200);
@@ -225,7 +319,7 @@ static JFrame window = new JFrame();
         }
     }
     
-    static void fillGridOI(short[][] arr, Grid pq) 
+    static void fillGridOI() 
     {
         Stack<Sh2> Q = new Stack<>();
         //Sh2 M[] = new Sh2[269];
@@ -233,7 +327,7 @@ static JFrame window = new JFrame();
         //moving rowwise
         while (i >= 0 && i < 269)
         {
-            if (arr[i][0] == 1)     //0 means travellable
+            if (chkmap[i][0] == 1)     //0 means travellable
             {
                 Sh2 S = new Sh2(i,(short)0);
                 Q.push(S);
@@ -247,11 +341,11 @@ static JFrame window = new JFrame();
         while (!Q.isEmpty())
         {
             S1 = Q.pop();
-            arr[S1.n1][S1.n2] = 10;
+            chkmap[S1.n1][S1.n2] = 10;
             
             System.out.println(S1.n1+" "+S1.n2);
             try {
-            if (arr[S1.n1][S1.n2+1] == 1)
+            if (chkmap[S1.n1][S1.n2+1] == 1)
             {
                 Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2+1));
                 Q.push(S2);
@@ -259,24 +353,24 @@ static JFrame window = new JFrame();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
             try {
-            if (arr[S1.n1][S1.n2-1] == 1)
+            if (chkmap[S1.n1][S1.n2-1] == 1)
             {
                 Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2-1));
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
             }} catch (ArrayIndexOutOfBoundsException E) {}
             try {
-            if (arr[S1.n1+1][S1.n2] == 1)
+            if (chkmap[S1.n1+1][S1.n2] == 1)
             {
                 Sh2 S2 = new Sh2((short)(S1.n1+1), S1.n2);
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
-                pq.map = arr;
+                pq.map = chkmap;
                 window.repaint();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
             try {
-            if (arr[S1.n1-1][S1.n2] == 1)
+            if (chkmap[S1.n1-1][S1.n2] == 1)
             {
                 Sh2 S2 = new Sh2((short)(S1.n1-1), S1.n2);
                 Q.push(S2);
@@ -286,4 +380,11 @@ static JFrame window = new JFrame();
         }
     }
 }
+
+//0 - Dead cell, Obstruction 
+//1 - Alive, Path
+//2- Character
+//5- Treasure
+//10- Accessibility
+//20- Guns
     
