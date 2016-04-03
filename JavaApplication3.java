@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -23,7 +22,7 @@ import javax.swing.JPanel;
 class Grid extends JPanel implements KeyListener {
     short map[][];
     
-  static int charposrow=0,charposcol=0;
+  static int charposrow=1,charposcol=1;
     Grid(short map[][])
     {
       this.map=map;
@@ -35,7 +34,8 @@ class Grid extends JPanel implements KeyListener {
     
     @Override
       public void keyPressed(KeyEvent e) {
-          map[charposcol][charposrow]=1;
+          //for(int p=0;p<5;p++)
+          map[charposcol][charposrow]=1;       
          switch (e.getKeyCode()) {
          case KeyEvent.VK_LEFT:
             charposcol--;
@@ -63,13 +63,12 @@ class Grid extends JPanel implements KeyListener {
             break;
          }
          map[charposcol][charposrow]=2;
-         repaint();
-      }
+       }
     
     boolean chkValidity()
     {
         try {
-            if(map[charposcol][charposrow]==0) 
+            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow]==20) 
             {    JOptionPane.showMessageDialog(null, "BooHoo. You're dead sucker.");
                 return false;
             }
@@ -98,8 +97,7 @@ class Grid extends JPanel implements KeyListener {
                 else if(map[i/10][j/10] == 10)
                     g.setColor(Color.red);
                 else if(map[i/10][j/10] == 20)
-                    g.setColor(Color.orange);
-
+                    g.setColor(Color.GRAY);
                 else
                     g.setColor(Color.blue);
                 g.fillRect(i/2, j/2, 5, 5);  
@@ -158,25 +156,25 @@ public static void introducegun(short cells[][],int x_offset, int y_offset)
             cells[35+x_offset][4+y_offset]=20;
             cells[36+x_offset][3+y_offset]=20;
             cells[36+x_offset][4+y_offset]=20;
-            cells[35+x_offset][22+y_offset]=20;
-            cells[35+x_offset][23+y_offset]=20;
-            cells[35+x_offset][25+y_offset]=20;
-            cells[36+x_offset][22+y_offset]=20;
-            cells[36+x_offset][23+y_offset]=20;
-            cells[36+x_offset][25+y_offset]=20;
-            cells[36+x_offset][26+y_offset]=20;
-            cells[36+x_offset][27+y_offset]=20;
-            cells[37+x_offset][28+y_offset]=20;
-            cells[38+x_offset][22+y_offset]=20;
-            cells[38+x_offset][23+y_offset]=20;
-            cells[38+x_offset][25+y_offset]=20;
-            cells[38+x_offset][26+y_offset]=20;
-            cells[38+x_offset][27+y_offset]=20;
-            cells[39+x_offset][23+y_offset]=20;
-            cells[39+x_offset][25+y_offset]=20;
-            cells[40+x_offset][23+y_offset]=20;
-            cells[40+x_offset][25+y_offset]=20;
-            cells[41+x_offset][24+y_offset]=20;
+//            cells[35+x_offset][22+y_offset]=20;
+//            cells[35+x_offset][23+y_offset]=20;
+//            cells[35+x_offset][25+y_offset]=20;
+//            cells[36+x_offset][22+y_offset]=20;
+//            cells[36+x_offset][23+y_offset]=20;
+//            cells[36+x_offset][25+y_offset]=20;
+//            cells[36+x_offset][26+y_offset]=20;
+//            cells[36+x_offset][27+y_offset]=20;
+//            cells[37+x_offset][28+y_offset]=20;
+//            cells[38+x_offset][22+y_offset]=20;
+//            cells[38+x_offset][23+y_offset]=20;
+//            cells[38+x_offset][25+y_offset]=20;
+//            cells[38+x_offset][26+y_offset]=20;
+//            cells[38+x_offset][27+y_offset]=20;
+//            cells[39+x_offset][23+y_offset]=20;
+//            cells[39+x_offset][25+y_offset]=20;
+//            cells[40+x_offset][23+y_offset]=20;
+//            cells[40+x_offset][25+y_offset]=20;
+//            cells[41+x_offset][24+y_offset]=20;
     }
  
  
@@ -225,14 +223,32 @@ public static short[][] doSimulationStep(short[][] oldMap){
 public static short[][] doSimulationStepGun(short[][] oldMap){
     
     short[][] newMap = new short[width][height];
+    for(int x=0;x<oldMap.length;x++)
+        for(int y=0; y<oldMap[0].length; y++){     //Required for making the border 1(alive-white)
+   //         System.out.print(oldMap[x][y]+",");
+            if(oldMap[x][y]!=2)
+            newMap[x][y]=oldMap[x][y];
+            else
+            {System.out.println(Grid.charposcol+" "+Grid.charposrow);
+                if(y==Grid.charposrow && x==Grid.charposcol)
+                    
+                {newMap[x][y]=2;
+                System.out.println("x"+x+" y"+y);
+                }
+                else
+                {newMap[x][y]=1;
+                System.out.println("x="+x+" y="+y);
+                }
+        }}
+    System.out.println();
     //Loop over each row and column of the map
-    for(int x=0; x<oldMap.length; x++){
-        for(int y=0; y<oldMap[0].length; y++){
-            //if(oldMap[x][y]==2) {newMap[x][y]=2;continue;}
+    for(int x=1; x<oldMap.length-1; x++){
+        for(int y=1; y<oldMap[0].length-1; y++){
+            if(newMap[x][y]==2) {newMap[x][y]=2;continue;}
             int nbs = countAliveNeighboursGun(oldMap, x, y);
             //The new value is based on our simulation rules
             //First, if a cell is alive but has too few neighbours, kill it.
-            if(oldMap[x][y] == 20){
+            if(newMap[x][y] == 20){         //20 is alive in this, 0 and 1 are dead
                 if(nbs == 2 || nbs == 3){
                     newMap[x][y] = 20;
                 }
@@ -240,12 +256,12 @@ public static short[][] doSimulationStepGun(short[][] oldMap){
                     newMap[x][y] = 1;
                 }
             } //Otherwise, if the cell is dead now, check if it has the right number of neighbours to be 'born'
-            else if(oldMap[x][y] == 1){
+            else if(newMap[x][y] == 1 || newMap[x][y] == 0){
                 if(nbs == 3){
                     newMap[x][y] = 20;
                 }
                 else{
-                    newMap[x][y] = 1;
+                    newMap[x][y] = newMap[x][y];
                 }
             }
         }
@@ -270,6 +286,7 @@ public static int countAliveNeighbours(short[][] map, int x, int y){
                 count = count + 1;
             }
             //Otherwise, a normal check of the neighbour
+            //counting alive cells
             else if(map[neighbour_x][neighbour_y] == 1){
                 count = count + 1;
             }
@@ -331,15 +348,18 @@ static JFrame window = new JFrame();
         chkmap = map;
         //fillGridOI(chkmap, pq);
         pq.map = map;
-        window.repaint();
-        introducegun(map,100,50);
         
+        introducegun(map,100,50);
+        introducegun(map,50,100);
+        //introducegun(map,150,150);
+        window.repaint();
+//        Thread.sleep(3000);
         for(;;)
         {
             map = doSimulationStepGun(map);
             pq.map=map;
             window.repaint();
-            Thread.sleep(200);
+            Thread.sleep(10);
         }
         //Thread.sleep(200);
     }
@@ -415,4 +435,11 @@ static JFrame window = new JFrame();
         }
     }
 }
+    
+//0 - Dead cell, Obstruction 
+//1 - Alive, Path
+//2- Character
+//5- Treasure
+//10- Accessibility
+//20- Guns
     
