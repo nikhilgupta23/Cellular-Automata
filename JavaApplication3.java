@@ -3,6 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package javaapplication3;
+
+/**
+ *
+ * @author acer
+ */
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -18,11 +24,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
-class Grid extends JPanel implements KeyListener {
+class Grid extends JPanel implements KeyListener, ActionListener {
     short map[][];
+    Timer timer;
+    static int bullI, bullJ;
+    static int charposrow=1,charposcol=1;
     
-  static int charposrow=1,charposcol=1;
+    
     Grid(short map[][])
     {
       this.map=map;
@@ -30,40 +40,10 @@ class Grid extends JPanel implements KeyListener {
       this.setFocusTraversalKeysEnabled(false);
       this.requestFocus();
       this.addKeyListener(this);
+      timer = new Timer(0, this);
+      timer.setDelay(200);
+      map[charposcol][charposrow] = 2;
     }
-    
-    @Override
-      public void keyPressed(KeyEvent e) {
-          //for(int p=0;p<5;p++)
-          map[charposcol][charposrow]=1;       
-         switch (e.getKeyCode()) {
-         case KeyEvent.VK_LEFT:
-            charposcol--;
-            System.out.println("VK_LEFT pressed");
-            if (!chkValidity())
-                charposcol++;
-            break;
-         case KeyEvent.VK_RIGHT:
-            charposcol++;
-            System.out.println("VK_RIGHT pressed");
-            if (!chkValidity())
-                charposcol--;
-            break;
-         case KeyEvent.VK_UP:
-            charposrow--;
-            System.out.println("VK_UP pressed");
-            if (!chkValidity())
-                charposrow++;
-            break;
-         case KeyEvent.VK_DOWN:
-            charposrow++;
-            System.out.println("VK_DOWN pressed"+charposrow);
-            if (!chkValidity())
-                charposrow--;
-            break;
-         }
-         map[charposcol][charposrow]=2;
-       }
     
     boolean chkValidity()
     {
@@ -76,6 +56,295 @@ class Grid extends JPanel implements KeyListener {
             {return false; }
             return !(charposrow == 146 || charposcol == 270);
     }
+    
+    int lastKeyPress;
+    @Override
+      public void keyPressed(KeyEvent e) {
+        try {
+            map[charposcol][charposrow]=1;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    charposcol--;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_LEFT pressed");
+                    if (!chkValidity())
+                        charposcol++;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    charposcol++;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_RIGHT pressed");
+                    if (!chkValidity())
+                        charposcol--;
+                    break;
+                case KeyEvent.VK_UP:
+                    charposrow--;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_UP pressed");
+                    if (!chkValidity())
+                        charposrow++;
+                    break;
+                case KeyEvent.VK_DOWN:
+                    charposrow++;
+                    lastKeyPress = e.getKeyCode();
+                    System.out.println("VK_DOWN pressed"+charposrow);
+                    if (!chkValidity())
+                        charposrow--;
+                    break;
+                case KeyEvent.VK_SPACE:
+                    boolean f = true;
+                    for (int i = 0; i < 269; i++)
+                        for (int j = 0; j < 145; j++)
+                        {
+                            if (map[i][j] == 15)
+                            {
+                                f = false;
+                                break;
+                            }
+                        }
+                    if (f)
+                        try {
+                        Shoot();
+                        } catch (InterruptedException E) {}
+                    break;
+            }
+            map[charposcol][charposrow]=2;
+            repaint();
+        } catch (ArrayIndexOutOfBoundsException ex) 
+        {   map[charposcol][charposrow]=2;
+            repaint();}
+      }
+      
+      static int dir;
+    
+    
+    void Shoot() throws InterruptedException
+    {
+        try {
+        switch(lastKeyPress)
+        {
+            case KeyEvent.VK_LEFT:
+                dir = 0;
+                bullI = charposcol-2;
+                bullJ = charposrow;
+                timer.start();
+                break;
+            case KeyEvent.VK_RIGHT:
+                dir = 1;
+                bullI = charposcol+2;
+                bullJ = charposrow;
+                timer.start();
+                break;
+            case KeyEvent.VK_DOWN:
+                dir = 2;
+                bullI = charposcol;
+                bullJ = charposrow+2;
+                timer.start();
+                break;
+            case KeyEvent.VK_UP:
+                dir = 3;
+                bullI = charposcol;
+                bullJ = charposrow-2;
+                timer.start();
+                break;
+        }
+        } catch (ArrayIndexOutOfBoundsException E) {return;}
+    }
+    void Boom()
+    {
+        try {
+        switch (dir) {
+            case 0:
+                bullI--;
+                if (map[bullI][bullJ] == 0)
+                {
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI][bullJ-1] == 0)
+                        map[bullI][bullJ-1] = 1;
+                    if (map[bullI][bullJ+1] == 0)
+                        map[bullI][bullJ+1] = 1;
+                }
+                else if (map[bullI-1][bullJ] == 0)
+                {
+                    bullI--;
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI][bullJ-1] == 0)
+                        map[bullI][bullJ-1] = 1;
+                    if (map[bullI][bullJ+1] == 0)
+                        map[bullI][bullJ+1] = 1;
+                }   repaint();
+                break;
+            case 1:
+                bullI++;
+                if (map[bullI][bullJ] == 0)
+                {
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI][bullJ-1] == 0)
+                        map[bullI][bullJ-1] = 1;
+                    if (map[bullI][bullJ+1] == 0)
+                        map[bullI][bullJ+1] = 1;
+                }
+                else if (map[bullI+1][bullJ] == 0)
+                {
+                    bullI++;
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI][bullJ-1] == 0)
+                        map[bullI][bullJ-1] = 1;
+                    if (map[bullI][bullJ+1] == 0)
+                        map[bullI][bullJ+1] = 1;
+                }   repaint();
+                break;
+            case 2:
+                bullJ++;
+                if (map[bullI][bullJ] == 0)
+                {
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI-1][bullJ] == 0)
+                        map[bullI-1][bullJ] = 1;
+                    if (map[bullI+1][bullJ] == 0)
+                        map[bullI+1][bullJ] = 1;
+                }
+                else if (map[bullI][bullJ+1] == 0)
+                {
+                    bullJ++;
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI-1][bullJ] == 0)
+                        map[bullI-1][bullJ] = 1;
+                    if (map[bullI+1][bullJ] == 0)
+                        map[bullI+1][bullJ] = 1;
+                }   repaint();
+                break;
+            case 3:
+                bullJ--;
+                if (map[bullI][bullJ] == 0)
+                {
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI-1][bullJ] == 0)
+                        map[bullI-1][bullJ] = 1;
+                    if (map[bullI+1][bullJ] == 0)
+                        map[bullI+1][bullJ] = 1;
+                }
+                else if (map[bullI][bullJ-1] == 0)
+                {
+                    bullJ--;
+                    map[bullI][bullJ] = 1;
+                    if (map[bullI-1][bullJ] == 0)
+                        map[bullI-1][bullJ] = 1;
+                    if (map[bullI+1][bullJ] == 0)
+                        map[bullI+1][bullJ] = 1;
+                }   repaint();
+                break;
+            default:
+                break;
+        }
+        } catch (ArrayIndexOutOfBoundsException E)
+        {}
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //boolean tf = false;
+        try {
+        switch (dir) {
+            case 0:
+                if (bullI < 0)
+                {   timer.stop();
+                map[bullI+2][bullJ] = 1;
+                return;
+                }
+                if (map[bullI][bullJ] == 0 || map[bullI+1][bullJ] == 0)
+                {
+                    timer.stop();
+                    bullI += 2;
+                    map[bullI][bullJ] = 1;
+                    Boom();
+                }
+                else 
+                {
+                    map[bullI][bullJ] = 15;
+                    if (map[bullI+2][bullJ] == 15)
+                        map[bullI+2][bullJ] = 1;
+                    bullI -= 2;
+                }
+                map[charposcol][charposrow] = 2;
+                repaint();
+                break;
+            case 1:
+                if (bullI > 269)
+                {   timer.stop();
+                map[bullI-2][bullJ] = 1;
+                return;
+                }
+                if (map[bullI][bullJ] == 0 || map[bullI-1][bullJ] == 0)
+                {
+                    timer.stop();
+                    bullI -= 2;
+                    map[bullI][bullJ] = 1;
+                    System.out.println("Boom");
+                    Boom();
+                }
+                else
+                {
+                    map[bullI][bullJ] = 15;
+                    if (map[bullI-2][bullJ] == 15)
+                        map[bullI-2][bullJ] = 1;
+                    bullI += 2;
+                }
+                map[charposcol][charposrow] = 2;
+                repaint();
+                break;
+            case 2:
+                if (bullJ > 145)
+                {   timer.stop();
+                map[bullI][bullJ-2] = 1;
+                return;
+                }
+                if (map[bullI][bullJ] == 0 || map[bullI][bullJ-1] == 0)
+                {
+                    timer.stop();
+                    bullJ -= 2;
+                    map[bullI][bullJ] = 1;
+                    Boom();
+                }
+                else 
+                {
+                    map[bullI][bullJ] = 15;
+                    if (map[bullI][bullJ-2] == 15)
+                        map[bullI][bullJ-2] = 1;
+                    bullJ += 2;
+                }
+                map[charposcol][charposrow] = 2;
+                repaint();
+                break;
+            case 3:
+                if (bullJ < 0)
+                {   timer.stop();
+                map[bullI][bullJ+2] = 1;
+                return;
+                }
+                if (map[bullI][bullJ] == 0 || map[bullI][bullJ+1] == 0 )
+                {
+                    timer.stop();
+                    bullJ += 2;
+                    map[bullI][bullJ] = 1;
+                    Boom();
+                }
+                else 
+                {
+                    map[bullI][bullJ] = 15;
+                    if (map[bullI][bullJ+2] == 15)
+                        map[bullI][bullJ+2] = 1;
+                    bullJ -= 2;
+                }
+                map[charposcol][charposrow] = 2;
+                repaint();
+                break;
+            default:
+                break;
+        }
+        } catch (ArrayIndexOutOfBoundsException E) {timer.stop();}
+    }
+    
     
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -90,32 +359,63 @@ class Grid extends JPanel implements KeyListener {
             for (int j = 0; j < 1450; j +=10)
             {
                 
-                if (map[i/10][j/10] == 1)
-                    g.setColor(Color.white);
-                else if(map[i/10][j/10] == 0)
-                    g.setColor(Color.black);
-                else if(map[i/10][j/10] == 10)
-                    g.setColor(Color.red);
-                else if(map[i/10][j/10] == 20)
-                    g.setColor(Color.GRAY);
-                else
-                    g.setColor(Color.blue);
-                g.fillRect(i/2, j/2, 5, 5);  
+                switch (map[i/10][j/10]) {
+                    case 1:
+                        g.setColor(Color.white);
+                        break;
+                    case 0:
+                        g.setColor(Color.black);
+                        break;
+                    case 10:
+                        g.setColor(Color.red);
+                        break;
+                    case 20:
+                        g.setColor(Color.GRAY);
+                        break;
+                    case 5:
+                        g.setColor(Color.yellow);
+                        break;
+                    case 15:
+                        g.setColor(Color.DARK_GRAY);
+                        break;
+                    default:
+                        g.setColor(Color.blue);
+                        break;
+                }
+                g.fillRect(i/2, j/2, 10, 10);  
             }
         }
         
     }
 }
 
-public class JavaApplication3 {
+class JavaApplication3 implements ActionListener{
 
     /**
      * @param args the command line arguments
      */
     
 static int width=269,height=145;                                   /////////////////////////////////
-
+static Timer timer;
 static float chanceToStartAlive = 0.45f;                           //////////////////////////////////
+
+JavaApplication3()
+{
+    timer = new Timer(0, this);
+    timer.setDelay(10);
+    for(int i=0; i<10; i++)
+        {
+            map = doSimulationStep(map);
+            pq.map=map;
+            window.repaint();
+            try {
+            Thread.sleep(200);
+            } catch (InterruptedException E) {}
+        }
+    introducegun(map,100,50);
+    introducegun(map,50,100);
+    timer.start();
+}
  
 
 public static void introducegun(short cells[][],int x_offset, int y_offset)
@@ -220,6 +520,22 @@ public static short[][] doSimulationStep(short[][] oldMap){
     return newMap;
 }
 
+void placeTreasure(){
+    //How hidden does a spot need to be for treasure?
+    //I find 5 or 6 is good. 6 for very rare treasure.
+    int treasureHiddenLimit = 5;
+    for (int x=0; x < width; x++){
+        for (int y=0; y < height; y++){
+            if(map[x][y] == 0){
+                int nbs = countAliveNeighbours(map, x, y);
+                if(nbs >= treasureHiddenLimit){
+                    map[x][y] = 5;
+                }
+            }
+        }
+    }
+}
+
 public static short[][] doSimulationStepGun(short[][] oldMap){
     
     short[][] newMap = new short[width][height];
@@ -227,7 +543,7 @@ public static short[][] doSimulationStepGun(short[][] oldMap){
         for(int y=0; y<oldMap[0].length; y++){     //Required for making the border 1(alive-white)
    //         System.out.print(oldMap[x][y]+",");
             if(oldMap[x][y]!=2)
-            newMap[x][y]=oldMap[x][y];
+                newMap[x][y]=oldMap[x][y];
             else
             {System.out.println(Grid.charposcol+" "+Grid.charposrow);
                 if(y==Grid.charposrow && x==Grid.charposcol)
@@ -328,40 +644,36 @@ public static short[][] generateMap(short map[][])
 
 static short map[][] = new short[width][height];
 static JFrame window = new JFrame();
+static Grid pq;
     public static void main(String[] args) throws InterruptedException {
         
         map=initialiseMap(map);
         window.setSize(1366,768);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Grid pq=new Grid(map);
+        pq=new Grid(map);
         window.add(pq);
         window.setVisible(true);
+        JavaApplication3 J = new JavaApplication3();
         
-        for(int i=0; i<10; i++)
-        {
-            map = doSimulationStep(map);
-            pq.map=map;
-            window.repaint();
-            Thread.sleep(200);
-        }
+        J.placeTreasure();
         short chkmap[][] = new short[width][height];
         chkmap = map;
         //fillGridOI(chkmap, pq);
         pq.map = map;
         
-        introducegun(map,100,50);
-        introducegun(map,50,100);
+        
         //introducegun(map,150,150);
-        window.repaint();
+        //window.repaint();
 //        Thread.sleep(3000);
-        for(;;)
-        {
+        
+        //Thread.sleep(200);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
             map = doSimulationStepGun(map);
             pq.map=map;
             window.repaint();
-            Thread.sleep(10);
-        }
-        //Thread.sleep(200);
     }
     
     static class Sh2
@@ -441,5 +753,5 @@ static JFrame window = new JFrame();
 //2- Character
 //5- Treasure
 //10- Accessibility
+//15- Character gun
 //20- Guns
-    
