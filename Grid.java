@@ -28,7 +28,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
     int lives = 3;
     JFrame W;
     int noOfTreasure = 0;
-    
+
     Grid(short map[][], int width, int height, JFrame W)
     {
       this.map=map;
@@ -37,19 +37,19 @@ class Grid extends JPanel implements KeyListener, ActionListener {
       this.W = W;
       Initialise();
     }
-    
+
     Grid (short map[][], short caveColor, short charColor)
     {
         this.map=map;
         Initialise();
         initialiseC(caveColor, charColor);
     }
-    
+
     void initialiseC(short caveColor, short charColor)
     {
-        
+
     }
-    
+
     void Initialise()
     {
       this.setFocusable(true);
@@ -60,11 +60,11 @@ class Grid extends JPanel implements KeyListener, ActionListener {
       timer.setDelay(200);
       map[charposcol][charposrow] = 2;
     }
-    
+
     boolean chkValidity()
     {
         try {
-            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow]==20) 
+            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow]==20)
             {   lives--;
                 System.out.println(lives);
                 if (lives <= 0)
@@ -84,7 +84,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             {return false; }
             return !(charposrow == width+1 || charposcol == height+1);
     }
-    
+
     int lastKeyPress;
     @Override
       public void keyPressed(KeyEvent e) {
@@ -138,14 +138,14 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             }
             map[charposcol][charposrow]=2;
             repaint();
-        } catch (ArrayIndexOutOfBoundsException ex) 
+        } catch (ArrayIndexOutOfBoundsException ex)
         {   map[charposcol][charposrow]=2;
             repaint();}
       }
-      
+
       static int dir;
-    
-    
+
+
     void Shoot() throws InterruptedException
     {
         try {
@@ -268,7 +268,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
         } catch (ArrayIndexOutOfBoundsException E)
         {}
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         //boolean tf = false;
@@ -284,7 +284,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 {
                     map[bullI][bullJ] = 5;
                      bullI -= 2;
-                }    
+                }
                 else if (map[bullI][bullJ] == 0 || map[bullI+1][bullJ] == 0)
                 {
                     timer.stop();
@@ -292,7 +292,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
-                else 
+                else
                 {
                     map[bullI][bullJ] = 15;
                     if (map[bullI+2][bullJ] == 15)
@@ -312,7 +312,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 {
                     map[bullI][bullJ] = 5;
                      bullI += 2;
-                }    
+                }
                 else if (map[bullI][bullJ] == 0 || map[bullI-1][bullJ] == 0)
                 {
                     timer.stop();
@@ -341,7 +341,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 {
                     map[bullI][bullJ] = 5;
                      bullJ += 2;
-                } 
+                }
                 else if (map[bullI][bullJ] == 0 || map[bullI][bullJ-1] == 0)
                 {
                     timer.stop();
@@ -349,7 +349,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
-                else 
+                else
                 {
                     map[bullI][bullJ] = 15;
                     if (map[bullI][bullJ-2] == 15)
@@ -369,7 +369,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 {
                     map[bullI][bullJ] = 5;
                      bullJ -= 2;
-                } 
+                }
                 else if (map[bullI][bullJ] == 0 || map[bullI][bullJ+1] == 0 )
                 {
                     timer.stop();
@@ -377,7 +377,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
-                else 
+                else
                 {
                     map[bullI][bullJ] = 15;
                     if (map[bullI][bullJ+2] == 15)
@@ -392,21 +392,21 @@ class Grid extends JPanel implements KeyListener, ActionListener {
         }
         } catch (ArrayIndexOutOfBoundsException E) {timer.stop();}
     }
-    
-    
+
+
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
     public void keyReleased(KeyEvent e) { }
-    
+
     @Override
-    public void paint(Graphics g) { 
+    public void paint(Graphics g) {
         int i;
         for (i = 0; i < width*10; i+=10)
         {
             for (int j = 0; j < height*10; j +=10)
             {
-                
+
                 switch (map[i/10][j/10]) {
                     case 1:
                         g.setColor(Color.white);
@@ -430,9 +430,9 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                         g.setColor(Color.blue);
                         break;
                 }
-                g.fillRect(i, j, 10, 10);  
+                g.fillRect(i, j, 10, 10);
             }
         }
-        
+
     }
 }

@@ -7,18 +7,18 @@ package javaapplication3;
 
 
 class GosperGun {
-    
+
     int width;
     int height;
     Grid G;
-    
+
     GosperGun(int w, int h, Grid G)
     {
         width = w;
         height = h;
         this.G = G;
     }
-    
+
     public void introducegun(short cells[][],int x_offset, int y_offset)
     {
             cells[1+x_offset][5+y_offset]=20;
@@ -77,9 +77,9 @@ class GosperGun {
 //            cells[40+x_offset][25+y_offset]=20;
 //            cells[41+x_offset][24+y_offset]=20;
     }
-    
+
     short[][] doSimulationStepGun(short[][] oldMap){
-    
+
     short[][] newMap = new short[width][height];
     for(int x=0;x<oldMap.length;x++)
         for(int y=0; y<oldMap[0].length; y++){     //Required for making the border 1(alive-white)
@@ -89,7 +89,7 @@ class GosperGun {
             else
             {//System.out.println(G.charposcol+" "+G.charposrow);
                 if(y == G.charposrow && x == G.charposcol)
-                {    
+                {
                    newMap[x][y]=2;
                     //System.out.println("x"+x+" y"+y);
                 }

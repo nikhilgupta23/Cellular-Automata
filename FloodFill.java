@@ -19,8 +19,8 @@ class FloodFill {
             n2 = num2;
         }
     }
-    
-    void fillGrid(short[][] arr, JFrame W, int width, int height) 
+
+    void fillGrid(short[][] arr, JFrame W, int width, int height)
     {
         Grid G = new Grid(arr, width, height, W);
         W.add(G);
@@ -35,17 +35,17 @@ class FloodFill {
                 Sh2 S = new Sh2(i,(short)0);
                 Q.push(S);
             }
-            else 
+            else
                 break;
             i++;
         }
         Sh2 S1;
-        
+
         while (!Q.isEmpty())
         {
             S1 = Q.pop();
             arr[S1.n1][S1.n2] = 10;
-            
+
             System.out.println(S1.n1+" "+S1.n2);
             try {
             if (arr[S1.n1][S1.n2+1] == 1)
@@ -81,5 +81,5 @@ class FloodFill {
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
         }
-    }    
+    }
 }

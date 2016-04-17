@@ -1,4 +1,3 @@
-
 package javaapplication3;
 
 import java.awt.event.ActionEvent;
@@ -21,7 +20,7 @@ class DmapGen implements ActionListener {
     float chanceToStartAlive = 0.45f;
     short map[][];
     int count;
-    
+
     DmapGen(int width, int height, JFrame W)
     {
         timer = new Timer(0, this);
@@ -37,18 +36,18 @@ class DmapGen implements ActionListener {
         W.add(G);
         timer.start();
     }
-    
+
     Grid createGrid()
     {
         return G;
     }
-         
+
     @Override
     public void actionPerformed(ActionEvent e) {
         G.map = M.doSimulationStep(G.map);
         count++;
         if (count > 10)
-        {   
+        {
             timer.stop();
             M.placeTreasure(G.map);
         }

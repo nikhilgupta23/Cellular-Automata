@@ -20,7 +20,7 @@ class DgosperGun implements ActionListener {
     GosperGun Gun;
     JFrame W;
     int width, height;
-    
+
     DgosperGun(Grid G, int width, int height, JFrame W)
     {
         this.width = width;
