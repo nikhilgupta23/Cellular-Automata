@@ -116,7 +116,7 @@ class GosperGun {
                     newMap[x][y] = 1;
                 }
             } //Otherwise, if the cell is dead now, check if it has the right number of neighbours to be 'born'
-            else if(newMap[x][y] == 1 || newMap[x][y] == 0){
+            else if(newMap[x][y] == 1 || newMap[x][y] == 0 || newMap[x][y] == 5){
                 if(nbs == 3){
                     newMap[x][y] = 20;
                 }
