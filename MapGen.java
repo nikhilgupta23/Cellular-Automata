@@ -71,6 +71,37 @@ class MapGen {
     return newMap;
 }
 
+short[][] doSmoothSimulationStep(short[][] oldMap){
+    short[][] newMap = new short[width][height];
+    //Loop over each row and column of the map
+    for(int x=0; x<oldMap.length; x++){
+        for(int y=0; y<oldMap[0].length; y++){
+            if(oldMap[x][y]==2) {newMap[x][y]=2;continue;}
+            int nbs = countAliveNeighbours(oldMap, x, y);
+            //The new value is based on our simulation rules
+            //First, if a cell is alive but has too few neighbours, kill it.
+            if(oldMap[x][y] == 0){
+                if(nbs < 5){
+                    newMap[x][y] = 0;
+                }
+                else{
+                    newMap[x][y] = 1;
+                }
+            } //Otherwise, if the cell is dead now, check if it has the right number of neighbours to be 'born'
+            else if(oldMap[x][y] == 1){
+                if(nbs > 5){
+                    newMap[x][y] = 1;
+                }
+                else{
+                    newMap[x][y] = 0;
+                }
+            }
+        }
+    }
+    return newMap;
+}
+
+
 void placeTreasure(short[][] map){
     //How hidden does a spot need to be for treasure?
     //I find 5 or 6 is good. 6 for very rare treasure.
