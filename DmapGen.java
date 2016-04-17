@@ -50,6 +50,10 @@ public class DmapGen implements ActionListener {
         if (count > 10)
         {   
             timer.stop();
+            for(int p=0;p<3;p++)
+            {
+                G.map=M.doSmoothSimulationStep(G.map);
+            }
             M.placeTreasure(G.map);
         }
         W.repaint();
