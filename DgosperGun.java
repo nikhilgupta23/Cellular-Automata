@@ -20,7 +20,7 @@ class DgosperGun implements ActionListener {
     GosperGun Gun;
     JFrame W;
     int width, height;
-    
+
     DgosperGun(Grid G, int width, int height, JFrame W)
     {
         this.width = width;
@@ -32,18 +32,19 @@ class DgosperGun implements ActionListener {
         this.W = W;
         //W.add(G);
         Gun = new GosperGun(width, height, G);
-        Gun.introducegun(G.map,100,50);
+        Gun.introducegun(G.map,20,30);
+        Gun.introducegun(G.map,65,10);
 //        for (int i = 0; i < width; i++)
 //            for (int j = 0;j < height; j++)
 //                if (G.map[i][j] == 20)
 //                    System.out.println("20 There");
-        Gun.introducegun(G.map,50,100);
+        //Gun.introducegun(G.map,50,100);
         timer.start();
     }
     @Override
     public void actionPerformed(ActionEvent e) {
             G.map = Gun.doSimulationStepGun(G.map);
-            System.out.println("Here");
+            //System.out.println("Here");
             W.repaint();
     }
 }

@@ -1,4 +1,3 @@
-
 package javaapplication3;
 
 import java.awt.event.ActionEvent;
@@ -10,7 +9,7 @@ import javax.swing.Timer;
  *
  * @author acer
  */
-public class DmapGen implements ActionListener {
+class DmapGen implements ActionListener {
 
     Timer timer;
     Grid G;
@@ -21,7 +20,7 @@ public class DmapGen implements ActionListener {
     float chanceToStartAlive = 0.45f;
     short map[][];
     int count;
-    
+
     DmapGen(int width, int height, JFrame W)
     {
         timer = new Timer(0, this);
@@ -33,22 +32,22 @@ public class DmapGen implements ActionListener {
         map = new short[width][height];
         M = new MapGen(width, height, chanceToStartAlive);
         map =  M.initialiseMap(map);
-        G = new Grid(map);
+        G = new Grid(map, width, height, W);
         W.add(G);
         timer.start();
     }
-    
+
     Grid createGrid()
     {
         return G;
     }
-         
+
     @Override
     public void actionPerformed(ActionEvent e) {
         G.map = M.doSimulationStep(G.map);
         count++;
         if (count > 10)
-        {   
+        {
             timer.stop();
             for(int p=0;p<3;p++)
             {

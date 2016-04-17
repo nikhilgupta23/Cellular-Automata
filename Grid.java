@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -22,25 +24,32 @@ class Grid extends JPanel implements KeyListener, ActionListener {
     int charposrow = 1,charposcol = 1;
     Color cave;
     Color ch;
-    
-    Grid(short map[][])
+    int width, height;
+    int lives = 3;
+    JFrame W;
+    int noOfTreasure = 0;
+
+    Grid(short map[][], int width, int height, JFrame W)
     {
       this.map=map;
+      this.width = width;
+      this.height = height;
+      this.W = W;
       Initialise();
     }
-    
+
     Grid (short map[][], short caveColor, short charColor)
     {
         this.map=map;
         Initialise();
         initialiseC(caveColor, charColor);
     }
-    
+
     void initialiseC(short caveColor, short charColor)
     {
-        
+
     }
-    
+
     void Initialise()
     {
       this.setFocusable(true);
@@ -51,19 +60,31 @@ class Grid extends JPanel implements KeyListener, ActionListener {
       timer.setDelay(200);
       map[charposcol][charposrow] = 2;
     }
-    
+
     boolean chkValidity()
     {
         try {
-            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow]==20) 
-            {    JOptionPane.showMessageDialog(null, "BooHoo. You're dead sucker.");
+            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow]==20)
+            {   lives--;
+                System.out.println(lives);
+                if (lives <= 0)
+                {
+                    float time = (float) 1.5;
+                    DeadFrame DF;
+                    if (time == 0)
+                        DF = new DeadFrame(noOfTreasure);
+                    DF = new DeadFrame(noOfTreasure*time);
+                    W.setVisible(false);
+                }
                 return false;
             }
+            if (map[charposcol][charposrow] == 5)
+                noOfTreasure++;
             } catch(Exception E)
             {return false; }
-            return !(charposrow == 146 || charposcol == 270);
+            return !(charposrow == width+1 || charposcol == height+1);
     }
-    
+
     int lastKeyPress;
     @Override
       public void keyPressed(KeyEvent e) {
@@ -100,8 +121,8 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                     break;
                 case KeyEvent.VK_SPACE:
                     boolean f = true;
-                    for (int i = 0; i < 269; i++)
-                        for (int j = 0; j < 145; j++)
+                    for (int i = 0; i < width; i++)
+                        for (int j = 0; j < height; j++)
                         {
                             if (map[i][j] == 15)
                             {
@@ -117,14 +138,14 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             }
             map[charposcol][charposrow]=2;
             repaint();
-        } catch (ArrayIndexOutOfBoundsException ex) 
+        } catch (ArrayIndexOutOfBoundsException ex)
         {   map[charposcol][charposrow]=2;
             repaint();}
       }
-      
+
       static int dir;
-    
-    
+
+
     void Shoot() throws InterruptedException
     {
         try {
@@ -247,7 +268,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
         } catch (ArrayIndexOutOfBoundsException E)
         {}
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         //boolean tf = false;
@@ -259,14 +280,19 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 map[bullI+2][bullJ] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 0 || map[bullI+1][bullJ] == 0)
+                if (map[bullI][bullJ] == 5)
+                {
+                    map[bullI][bullJ] = 5;
+                     bullI -= 2;
+                }
+                else if (map[bullI][bullJ] == 0 || map[bullI+1][bullJ] == 0)
                 {
                     timer.stop();
                     bullI += 2;
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
-                else 
+                else
                 {
                     map[bullI][bullJ] = 15;
                     if (map[bullI+2][bullJ] == 15)
@@ -277,12 +303,17 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 repaint();
                 break;
             case 1:
-                if (bullI > 269)
+                if (bullI > width)
                 {   timer.stop();
                 map[bullI-2][bullJ] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 0 || map[bullI-1][bullJ] == 0)
+                if (map[bullI][bullJ] == 5)
+                {
+                    map[bullI][bullJ] = 5;
+                     bullI += 2;
+                }
+                else if (map[bullI][bullJ] == 0 || map[bullI-1][bullJ] == 0)
                 {
                     timer.stop();
                     bullI -= 2;
@@ -301,19 +332,24 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 repaint();
                 break;
             case 2:
-                if (bullJ > 145)
+                if (bullJ > height)
                 {   timer.stop();
                 map[bullI][bullJ-2] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 0 || map[bullI][bullJ-1] == 0)
+                if (map[bullI][bullJ] == 5)
+                {
+                    map[bullI][bullJ] = 5;
+                     bullJ += 2;
+                }
+                else if (map[bullI][bullJ] == 0 || map[bullI][bullJ-1] == 0)
                 {
                     timer.stop();
                     bullJ -= 2;
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
-                else 
+                else
                 {
                     map[bullI][bullJ] = 15;
                     if (map[bullI][bullJ-2] == 15)
@@ -329,14 +365,19 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 map[bullI][bullJ+2] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 0 || map[bullI][bullJ+1] == 0 )
+                if (map[bullI][bullJ] == 5)
+                {
+                    map[bullI][bullJ] = 5;
+                     bullJ -= 2;
+                }
+                else if (map[bullI][bullJ] == 0 || map[bullI][bullJ+1] == 0 )
                 {
                     timer.stop();
                     bullJ += 2;
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
-                else 
+                else
                 {
                     map[bullI][bullJ] = 15;
                     if (map[bullI][bullJ+2] == 15)
@@ -351,21 +392,21 @@ class Grid extends JPanel implements KeyListener, ActionListener {
         }
         } catch (ArrayIndexOutOfBoundsException E) {timer.stop();}
     }
-    
-    
+
+
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
     public void keyReleased(KeyEvent e) { }
-    
+
     @Override
-    public void paint(Graphics g) { 
+    public void paint(Graphics g) {
         int i;
-        for (i = 0; i < 2690; i+=10)
+        for (i = 0; i < width*10; i+=10)
         {
-            for (int j = 0; j < 1450; j +=10)
+            for (int j = 0; j < height*10; j +=10)
             {
-                
+
                 switch (map[i/10][j/10]) {
                     case 1:
                         g.setColor(Color.white);
@@ -389,9 +430,9 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                         g.setColor(Color.blue);
                         break;
                 }
-                g.fillRect(i/2, j/2, 10, 10);  
+                g.fillRect(i, j, 10, 10);
             }
         }
-        
+
     }
 }

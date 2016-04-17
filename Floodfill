@@ -1,0 +1,119 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package se;
+
+import java.util.*;
+
+public class Floodfill {
+    public static void main(String Args[])
+    {
+        short[][] arr = {{0,0,1,1,1},
+                         {1,0,0,0,1},
+                         {0,1,1,0,1},
+                         {0,0,1,0,1},
+                         {1,0,1,0,0},
+                         {1,0,1,1,0}       
+                         };
+        System.out.println(arr[5][4]);
+        System.out.println(Arrays.deepToString(arr));
+        fillGridOI(arr);
+        System.out.println(Arrays.deepToString(arr));
+    }
+    
+    static void fillGrid(short[][] arr, short r, short c) 
+
+    {
+        if (r < 0 || c < 0 || r > 5 || c > 4)
+            return;
+        
+        if (arr[r][c] == 0)
+
+        {
+
+            arr[r][c] = 10;
+
+            fillGrid(arr, (short)(r + 1), c);
+
+            fillGrid(arr, (short)(r - 1), c);
+
+            fillGrid(arr, r, (short)(c + 1));
+
+            fillGrid(arr, r, (short)(c - 1));
+
+        }
+    }
+    
+    static class Sh2
+    {
+        short n1;
+        short n2;
+        Sh2()
+        {}
+        Sh2(short num1, short num2)
+        {
+            n1 = num1;
+            n2 = num2;
+        }
+    }
+    static void fillGridOI(short[][] arr) 
+    {
+        Stack<Sh2> Q = new Stack<Sh2>();
+        //Sh2 M[] = new Sh2[269];
+        short i = 0;
+        //moving rowwise
+        while (i >= 0 && i <= 5)
+        {
+            if (arr[i][0] == 0)     //0 means travellable
+            {
+                Sh2 S = new Sh2(i,(short)0);
+                Q.push(S);
+            }
+            else 
+                break;
+            i++;
+        }
+        Sh2 S1;
+        
+        while (!Q.isEmpty())
+        {
+            S1 = Q.pop();
+            arr[S1.n1][S1.n2] = 10;
+            System.out.println(S1.n1+" "+S1.n2);
+            try {
+            if (arr[S1.n1][S1.n2+1] == 0)
+            {
+                Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2+1));
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }
+            } catch (ArrayIndexOutOfBoundsException E) {}
+            try {
+            if (arr[S1.n1][S1.n2-1] == 0)
+            {
+                Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2-1));
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }} catch (ArrayIndexOutOfBoundsException E) {}
+            try {
+            if (arr[S1.n1+1][S1.n2] == 0)
+            {
+                Sh2 S2 = new Sh2((short)(S1.n1+1), S1.n2);
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }
+            } catch (ArrayIndexOutOfBoundsException E) {}
+            try {
+            if (arr[S1.n1-1][S1.n2] == 0)
+            {
+                Sh2 S2 = new Sh2((short)(S1.n1-1), S1.n2);
+                Q.push(S2);
+                System.out.println(S2.n1+" "+S2.n2);
+            }
+            } catch (ArrayIndexOutOfBoundsException E) {}
+        }
+    }
+}
+
