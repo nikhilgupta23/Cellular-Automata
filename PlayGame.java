@@ -19,7 +19,6 @@ public final class PlayGame {
         
         J.setSize(1366,768);
         J.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Thread.sleep(5000);
         G = DM.createGrid();
         
         J.add(G);
@@ -28,6 +27,7 @@ public final class PlayGame {
             AccessCheck();
         J.setVisible(true);
         J.add(G);
+        new Time();
     }
     
     void AccessCheck() throws InterruptedException
@@ -43,6 +43,5 @@ public final class PlayGame {
         Grid Gf = new Grid(chkmap, width, height, Fl);
         Fl.add(Gf);
         F.fillGrid(chkmap, Fl,width, height);
-//         Thread.sleep(1000);
     }
 }
