@@ -433,6 +433,9 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 g.fillRect(i, j, 10, 10);
             }
         }
-
+        g.setColor(Color.blue);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 20)); 
+        String str = "Time Left: "+Time.seconds ;
+        g.drawString(str, 1000, 20);
     }
 }
