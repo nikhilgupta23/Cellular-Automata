@@ -1,7 +1,12 @@
 package javaapplication3;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -49,12 +54,78 @@ class DmapGen implements ActionListener {
         if (count > 10)
         {
             timer.stop();
-            for(int p=0;p<3;p++)
+            for(int p=0;p<2;p++)
             {
                 G.map=M.doSmoothSimulationStep(G.map);
             }
+            G.map=fillCaveWithWater(G.map,15);
+            G.map=addCaveWaterfalls(G.map,10);
             M.placeTreasure(G.map);
         }
         W.repaint();
     }
+    
+    public short[][] fillCaveWithWater(short map[][], int depth)
+{
+    int x, y;
+    int lowestPoint = 0;
+    AB: for (y = height - 1; y > 0; y--)
+        for (x = 0; x < width; x++)              
+            if (lowestPoint == 0 && map[y][x] == 1)
+            {
+                lowestPoint = y;
+                break AB;
+            }
+    for (y = lowestPoint; y > lowestPoint - depth; y--)
+        for (x = 0; x < width; x++)
+            {
+                if (map[x][y] == 1)
+                    map[x][y] = 30;
+            }
+    return map;
+}
+    
+    public short[][] addCaveWaterfalls(short map[][], int numWaterFalls)
+{
+    int x,y;
+    Stack<Point> waterFallSpawns = new Stack<>();
+    while (waterFallSpawns.size() < numWaterFalls)
+    {       
+        x = (int)(Math.random()*width);
+        y = (int)(Math.random()*height);
+        if (map[x][y] == 1 && y - 1 >= 0 && map[x][y-1] == 0)
+           
+        {
+            waterFallSpawns.push(new Point(x, y));
+            System.out.println("Point = "+x+" "+y);
+        }
+        
+    }
+    int i;
+    Point waterfall;
+    while(!waterFallSpawns.isEmpty())
+    {
+     System.out.println("BLASDFSA");
+     
+        waterfall = waterFallSpawns.pop();
+        System.out.println(waterfall);
+        map[waterfall.x][waterfall.y] = 30;
+        while (map[waterfall.x][waterfall.y+1] == 1)
+        {
+            waterfall.y++;
+            map[waterfall.x][waterfall.y] = 30;
+        }
+        if (map[waterfall.x - 1][waterfall.y] == 1)
+        {
+            waterFallSpawns.push(new Point(waterfall.x -1, waterfall.y));
+            
+        }
+        if (map[waterfall.x + 1][waterfall.y] == 1)
+        {
+            waterFallSpawns.push(new Point(waterfall.x + 1, waterfall.y));            
+        }
+    }
+    return map;
+}
+
 }

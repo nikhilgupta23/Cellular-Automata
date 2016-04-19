@@ -6,6 +6,7 @@
 package javaapplication3;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -426,11 +427,14 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                     case 15:
                         g.setColor(Color.DARK_GRAY);
                         break;
+                    case 30:
+                        g.setColor(Color.GREEN);
+                        break;
                     default:
                         g.setColor(Color.blue);
                         break;
                 }
-                g.fillRect(i, j, 10, 10);
+                g.fillRect(i/2, j/2, 10, 10);
             }
         }
         g.setColor(Color.blue);

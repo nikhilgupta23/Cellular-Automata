@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 public final class PlayGame {
-    int width=135, height=70; 
+    int width=135*2, height=70*2; 
     JFrame J = new JFrame();
     Grid G;
     
@@ -24,7 +24,7 @@ public final class PlayGame {
         J.add(G);
         J.setVisible(true);
         //if ())
-            AccessCheck();
+            //AccessCheck();
         J.setVisible(true);
         J.add(G);
         new Time();
