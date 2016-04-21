@@ -1,0 +1,69 @@
+package se;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.Timer;
+
+/**
+ *
+ * @author acer
+ */
+class DmapGen implements ActionListener {
+
+    Timer timer;
+    Grid G;
+    MapGen M;
+    JFrame W;
+    int width;
+    int height;
+    float chanceToStartAlive = 0.45f;
+    short map[][];
+    int count;
+
+    DmapGen(int width, int height, JFrame W)
+    {
+        timer = new Timer(0, this);
+        timer.setDelay(50);
+        this.width = width;
+        this.height = height;
+        this.W = W;
+        count = 0;
+        map = new short[width][height];
+        M = new MapGen(width, height, chanceToStartAlive);
+        map =  M.initialiseMap(map);
+        G = new Grid(map, width, height, W);
+        W.add(G);
+        timer.start();
+    }
+
+    Grid createGrid()
+    {
+        return G;
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        G.map = M.doSimulationStep(G.map);
+        count++;
+        if (count > 10)
+        {
+            timer.stop();
+            for(int p=0;p<3;p++)
+            {
+                G.map=M.doSmoothSimulationStep(G.map);
+            }
+            M.placeTreasure(G.map);
+            FloodFill F = new FloodFill();
+            F.showFrame(G.map, W, width, height);
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException E)
+//            {}
+        }
+        W.setVisible(true);
+        W.repaint();
+    }
+}
