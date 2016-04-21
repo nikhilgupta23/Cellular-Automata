@@ -42,8 +42,8 @@ Timer t;
         W.setVisible(false);
         Fl = new JFrame();
         Fl.setSize(1366,768);
-        Grid G = new Grid(arr, width, height, Fl);
-        Fl.add(G);
+        Grid FG = new Grid(arr, width, height, Fl);
+        Fl.add(FG);
         Fl.setVisible(true);
         Stack<Sh2> Q = new Stack<>();
         //Sh2 M[] = new Sh2[269];
@@ -69,7 +69,7 @@ Timer t;
 
             System.out.println(S1.n1+" "+S1.n2);
             try {
-            if (arr[S1.n1][S1.n2+1] == 1)
+            if (arr[S1.n1][S1.n2+1] == 1 )
             {
                 Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2+1));
                 Q.push(S2);
@@ -78,20 +78,21 @@ Timer t;
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
             try {
-            if (arr[S1.n1][S1.n2-1] == 1)
+            if (arr[S1.n1][S1.n2-1] == 1 )
             {
                 Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2-1));
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
+                FG.map = arr;
                 Fl.repaint();
             }} catch (ArrayIndexOutOfBoundsException E) {}
             try {
-            if (arr[S1.n1+1][S1.n2] == 1)
+            if (arr[S1.n1+1][S1.n2] == 1 )
             {
                 Sh2 S2 = new Sh2((short)(S1.n1+1), S1.n2);
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
-                G.map = arr;
+                FG.map = arr;
                 Fl.repaint();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
@@ -101,14 +102,16 @@ Timer t;
                 Sh2 S2 = new Sh2((short)(S1.n1-1), S1.n2);
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
+                FG.map = arr;
                 Fl.repaint();
+                //Fl.validate();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
         }
         t.stop();
     }
     
-    void showFrame(short map[][], JFrame W, int width, int height)
+    JFrame showFrame(short map[][], JFrame W, int width, int height)
     {
         this.W = W;
         this.width = width;
@@ -118,5 +121,6 @@ Timer t;
             System.arraycopy(map[i], 0, chkmap[i], 0, height);
         t.start();
         fillGrid(chkmap);
+        return Fl;
     }
 }

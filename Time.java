@@ -15,14 +15,28 @@ import javax.swing.Timer;
  */
 public class Time extends JComponent {
 
-    public static int seconds = 100;
-
+    public static int seconds = 30;
+    DeadFrame D;
+    int score;
+    //JFrame W;
+    
+    void assignDF(DeadFrame D)
+    {
+        this.D = D;
+    }
+    
+    void assignScore(int s)
+    {
+        score = s;
+    }
+    
     public Time()
     {
      //   this.setOpaque(false);
-        Timer timer = new Timer(100000, (ActionEvent evt) -> {
-            JOptionPane.showMessageDialog(null, "BooHoo. tIME'S UP");
-            seconds=100;
+        Timer timer = new Timer(30000, (ActionEvent evt) -> {
+            JOptionPane.showMessageDialog(null, "BooHoo. Time's up.");
+            //seconds=100;
+            D.screenF();
         });
         timer.start();
         Timer periodicTime = new Timer(1000, (ActionEvent evt) -> {
@@ -30,5 +44,4 @@ public class Time extends JComponent {
         });
         periodicTime.start();
     }
-
 }
