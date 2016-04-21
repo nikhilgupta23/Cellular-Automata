@@ -1,4 +1,3 @@
-
 package se;
 
 import java.sql.*;
@@ -21,18 +20,18 @@ class DB {
     }
         System.out.println("Opened database successfully");
     }
-    
+
     boolean createTable()
     {
-      try {  
+      try {
       stmt = c.createStatement();
       String sql = "CREATE TABLE UInfo (" +
                    " ID             CHAR(10) PRIMARY KEY     NOT NULL," +
-                   " NAME           TEXT   , " + 
-                   " Password       CHAR(10)     NOT NULL, " + 
-                   " HighScore      INT          DEFAULT(0)," + 
+                   " NAME           TEXT   , " +
+                   " Password       CHAR(10)     NOT NULL, " +
+                   " HighScore      INT          DEFAULT(0)," +
                    " CaveColor      INT check(CaveColor < 5 AND CaveColor > 0),"+
-                   " CharColor      INT check(CharColor < 5 AND CharColor > 0))"; 
+                   " CharColor      INT check(CharColor < 5 AND CharColor > 0))";
       stmt.executeUpdate(sql);
       //stmt.close();
       return true;
@@ -40,10 +39,10 @@ class DB {
         {   System.out.println("Create Table Failed");
             return false; }
     }
-    
+
     boolean insertDB(String user, String name, String pass)
     {
-      try {  
+      try {
       stmt = c.createStatement();
       String sql = "INSERT INTO UInfo(ID, NAME, Password)"+
              "VALUES('"+user+"','"+name+"','"+pass+"')";
@@ -55,11 +54,11 @@ class DB {
         {   System.out.println("Insert Failed");
             return false; }
     }
-    
+
     boolean chkPass(String user, String pass)
     {
         try {
-            stmt = c.createStatement();   
+            stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery( "SELECT Password FROM UInfo where ID = '"+user+"'" );
             String passD = rs.getString("Password");
             if (passD.equals(pass))
@@ -72,11 +71,11 @@ class DB {
             return false;
         }
     }
-    
+
     int viewHS(String user)
     {
         try {
-            stmt = c.createStatement();   
+            stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery( "SELECT HighScore FROM UInfo where ID = '"+user+"'" );
             return (rs.getInt("HighScore"));
         } catch (Exception E)
@@ -85,14 +84,14 @@ class DB {
             return -1;
         }
     }
-    
+
     boolean updateHS(String user, int hs)
     {
         int HS = 0;
         try {
-       stmt = c.createStatement();   
+       stmt = c.createStatement();
       ResultSet rs = stmt.executeQuery( "SELECT * FROM UInfo where ID like '"+user+"'" );
-     
+
       while ( rs.next() ) {
          HS = rs.getInt("HighScore");
       }
@@ -104,7 +103,7 @@ class DB {
       if (hs > HS) {
       //stmt = c.createStatement();
       String sql = "UPDATE UInfo set HighScore = "+hs+" where ID = '"+user+"'";
-      try { 
+      try {
       stmt.executeUpdate(sql);
       } catch (SQLException E)
           {   System.out.println("Update Failed1");
@@ -114,10 +113,10 @@ class DB {
       }
       return false;
       //c.close();
-      
-        
+
+
     }
-    
+
     boolean updateColor(String user, int CaC, int ChC)
     {
         try
@@ -137,7 +136,7 @@ class DB {
             return false;
         }
     }
-    
+
     short CacSelect(String user)
     {
         try {
@@ -149,11 +148,11 @@ class DB {
       if (Cac == 0)
           return -1;
       return Cac;
-      } catch (SQLException E) 
-      {     System.out.println("Select Failed");   
+      } catch (SQLException E)
+      {     System.out.println("Select Failed");
             return -1;                    }
     }
-    
+
     short ChcSelect(String user)
     {
         try {
@@ -165,11 +164,11 @@ class DB {
       if (Cac == 0)
           return -1;
       return Cac;
-      } catch (SQLException E) 
-      {     System.out.println("Select Failed");   
+      } catch (SQLException E)
+      {     System.out.println("Select Failed");
             return -1;                    }
     }
-    
+
     void selectInfo(String user)
     {
       try {
@@ -186,10 +185,10 @@ class DB {
       }
       rs.close();
       //stmt.close();
-      } catch (SQLException E) 
+      } catch (SQLException E)
       {     System.out.println("Select Failed");   }
     }
-    
+
     void selectAll(String user)
     {
         try {
@@ -212,10 +211,10 @@ class DB {
       //rs.close();
       //stmt.close();
       //c.close();
-      } catch (SQLException E) 
+      } catch (SQLException E)
       {     System.out.println("Select Failed");   }
     }
-    
+
     void closeDB()
     {
         try {
@@ -223,7 +222,7 @@ class DB {
         } catch (SQLException E)
         { System.out.println(E); }
     }
-    
+
     public static void main(String Args[])
     {
         DB D = new DB();

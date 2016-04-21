@@ -31,7 +31,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
     int noOfTreasure = 0;
     DgosperGun Dg;
     DeadFrame D;
-    
+
     Grid(short map[][], int width, int height, JFrame W)
     {
       this.map=map;
@@ -40,7 +40,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
       this.W = W;
       Initialise();
     }
-    
+
     void assignDF(DeadFrame D)
     {
         this.D = D;
@@ -230,7 +230,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             default:
                 break;
         }
-        
+
         if (width > (36+bullI) && height > (8+bullJ))
             Dg.Gun.introducegun(map, bullI, bullJ);
         else {
@@ -323,7 +323,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
         {}
         }
     }
-    
+
     void remove15()
     {
         for (int i = 0; i < width; i++)
@@ -448,7 +448,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             default:
                 break;
         }
-        } catch (ArrayIndexOutOfBoundsException E) 
+        } catch (ArrayIndexOutOfBoundsException E)
         {   timer.stop();
             map[charposcol][charposrow] = 2;
         }
@@ -487,6 +487,9 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                     case 15:
                         g.setColor(Color.DARK_GRAY);
                         break;
+                    case 30:
+                        g.setColor(Color.GREEN);
+                        break;
                     default:
                         g.setColor(ch);
                         break;
@@ -495,7 +498,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             }
         }
         g.setColor(Color.ORANGE);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20)); 
+        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
         String str = "Time Left: "+Time.seconds ;
         g.drawString(str, 1000, 20);
         g.setColor(Color.MAGENTA);

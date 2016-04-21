@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se;
+package javaapplication3;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -16,7 +16,7 @@ import javax.swing.Timer;
 public class Time extends JComponent {
 
     public static int seconds = 100;
- 
+
     public Time()
     {
      //   this.setOpaque(false);
@@ -30,4 +30,5 @@ public class Time extends JComponent {
         });
         periodicTime.start();
     }
+
 }

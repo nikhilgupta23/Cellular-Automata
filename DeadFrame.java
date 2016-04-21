@@ -22,7 +22,7 @@ public class DeadFrame {
     JFrame f;
     String U;
     int score;
-    DeadFrame(String user)    
+    DeadFrame(String user)
     {
         f = new JFrame();
         f.add(new JLabel(new ImageIcon("D:/Images/4.gif")));
@@ -30,12 +30,12 @@ public class DeadFrame {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         U = user;
     }
-    
+
     void assignFFmap(short map[][])
     {
-        
+
     }
-    
+
     void Score(int s)
     {
         Disp D = new Disp();
@@ -49,16 +49,16 @@ public class DeadFrame {
             JOptionPane.showMessageDialog(null, "Congratulations! New High Score :DD");
         }
     }
-    
+
     class Disp extends JPanel {
         @Override
         public void paint(Graphics g) {
             g.setColor(Color.blue);
-            g.setFont(new Font("TimesRoman", Font.BOLD, 30)); 
+            g.setFont(new Font("TimesRoman", Font.BOLD, 30));
             String str = "Well, you're dead. You might as well \n know how much "
                     + "you scored: "+score;
             g.drawString(str, 150, 50);
-            
+
         }
     }
 }
