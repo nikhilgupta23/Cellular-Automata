@@ -3,13 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication3;
+package se;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Stack;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
-class FloodFill {
+class FloodFill implements ActionListener {
+JFrame W;
+int width;
+int height;
+JFrame Fl;
+Timer t;
 
+    FloodFill() {
+        this.t = new Timer(0, this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Fl.repaint();
+    }
+    
     class Sh2
     {
         short n1, n2;
@@ -20,10 +37,14 @@ class FloodFill {
         }
     }
 
-    void fillGrid(short[][] arr, JFrame W, int width, int height)
+    void fillGrid(short[][] arr)
     {
-        Grid G = new Grid(arr, width, height, W);
-        W.add(G);
+        W.setVisible(false);
+        Fl = new JFrame();
+        Fl.setSize(1366,768);
+        Grid G = new Grid(arr, width, height, Fl);
+        Fl.add(G);
+        Fl.setVisible(true);
         Stack<Sh2> Q = new Stack<>();
         //Sh2 M[] = new Sh2[269];
         short i = 0;
@@ -53,6 +74,7 @@ class FloodFill {
                 Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2+1));
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
+                Fl.repaint();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
             try {
@@ -61,6 +83,7 @@ class FloodFill {
                 Sh2 S2 = new Sh2(S1.n1, (short)(S1.n2-1));
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
+                Fl.repaint();
             }} catch (ArrayIndexOutOfBoundsException E) {}
             try {
             if (arr[S1.n1+1][S1.n2] == 1)
@@ -69,7 +92,7 @@ class FloodFill {
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
                 G.map = arr;
-                W.repaint();
+                Fl.repaint();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
             try {
@@ -78,8 +101,22 @@ class FloodFill {
                 Sh2 S2 = new Sh2((short)(S1.n1-1), S1.n2);
                 Q.push(S2);
                 System.out.println(S2.n1+" "+S2.n2);
+                Fl.repaint();
             }
             } catch (ArrayIndexOutOfBoundsException E) {}
         }
+        t.stop();
+    }
+    
+    void showFrame(short map[][], JFrame W, int width, int height)
+    {
+        this.W = W;
+        this.width = width;
+        this.height = height;
+        short[][] chkmap = new short[width][height];
+        for (int i = 0; i < width; i++)
+            System.arraycopy(map[i], 0, chkmap[i], 0, height);
+        t.start();
+        fillGrid(chkmap);
     }
 }

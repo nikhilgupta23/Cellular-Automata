@@ -1,7 +1,9 @@
 package se;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -58,7 +60,14 @@ class DmapGen implements ActionListener {
             G.map=fillCaveWithWater(G.map,15);
             G.map=addCaveWaterfalls(G.map,10);
             M.placeTreasure(G.map);
-        }
+            FloodFill F = new FloodFill();
+            F.showFrame(G.map, W, width, height);
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException E)
+//            {}
+         }
+        W.setVisible(true);
         W.repaint();
     }
 
