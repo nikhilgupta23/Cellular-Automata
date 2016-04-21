@@ -65,7 +65,7 @@ class DmapGen implements ActionListener {
         W.repaint();
     }
     
-    public short[][] fillCaveWithWater(short map[][], int depth)
+public short[][] fillCaveWithWater(short map[][], int depth)
 {
     int x, y;
     int lowestPoint = 0;
@@ -85,7 +85,7 @@ class DmapGen implements ActionListener {
     return map;
 }
     
-    public short[][] addCaveWaterfalls(short map[][], int numWaterFalls)
+public short[][] addCaveWaterfalls(short map[][], int numWaterFalls)
 {
     int x,y;
     Stack<Point> waterFallSpawns = new Stack<>();
@@ -93,34 +93,28 @@ class DmapGen implements ActionListener {
     {       
         x = (int)(Math.random()*width);
         y = (int)(Math.random()*height);
-        if (map[x][y] == 1 && y - 1 >= 0 && map[x][y-1] == 0)
-           
+        if (map[x][y] == 1 && y - 1 >= 0 && map[x][y-1] == 0)           
         {
             waterFallSpawns.push(new Point(x, y));
-            System.out.println("Point = "+x+" "+y);
-        }
-        
+        }   
     }
     int i;
     Point waterfall;
     while(!waterFallSpawns.isEmpty())
     {
-     System.out.println("BLASDFSA");
-     
         waterfall = waterFallSpawns.pop();
-        System.out.println(waterfall);
         map[waterfall.x][waterfall.y] = 30;
-        while (map[waterfall.x][waterfall.y+1] == 1)
+        while (waterfall.y+1 < height && map[waterfall.x][waterfall.y+1] == 1)
         {
             waterfall.y++;
             map[waterfall.x][waterfall.y] = 30;
         }
-        if (map[waterfall.x - 1][waterfall.y] == 1)
+        if (waterfall.x-1 >=0 && map[waterfall.x - 1][waterfall.y] == 1)
         {
             waterFallSpawns.push(new Point(waterfall.x -1, waterfall.y));
             
         }
-        if (map[waterfall.x + 1][waterfall.y] == 1)
+        if (waterfall.x+1 < width && map[waterfall.x + 1][waterfall.y] == 1)
         {
             waterFallSpawns.push(new Point(waterfall.x + 1, waterfall.y));            
         }
@@ -128,4 +122,46 @@ class DmapGen implements ActionListener {
     return map;
 }
 
+public  short[][] simulateWaterfalls(short map[][])
+{
+    Stack<Point> stack= new Stack<>();
+    for(int p=0;p<width;p++)
+    {
+        for(int q=0;q<height-1;q++)
+        {
+            if(map[p][q]==30 && map[p][q+1]==1)
+            {
+                int r=q+1;
+                while(map[p][r] == 1)
+                {
+                    map[p][r]=30;
+                    r++;
+                }
+                if(map[p][r] == 0)
+                stack.push(new Point(p,r-1));
+            }
+        }
+    }
+    while(!stack.isEmpty())
+    {
+        Point waterfall = stack.pop();
+        map[waterfall.x][waterfall.y] = 30;
+        while (waterfall.y+1 < height && map[waterfall.x][waterfall.y+1] == 1)
+        {
+            waterfall.y++;
+            map[waterfall.x][waterfall.y] = 30;
+        }
+        if (waterfall.x -1 >=0 && map[waterfall.x - 1][waterfall.y] == 1)
+        {
+            stack.push(new Point(waterfall.x -1, waterfall.y));
+            
+        }
+        if (waterfall.x + 1<width && map[waterfall.x + 1][waterfall.y] == 1)
+        {
+            stack.push(new Point(waterfall.x + 1, waterfall.y));            
+        }
+    }
+    return map;
+}
+    
 }
