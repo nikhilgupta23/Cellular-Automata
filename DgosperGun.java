@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication3;
+package se;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +32,8 @@ class DgosperGun implements ActionListener {
         this.W = W;
         //W.add(G);
         Gun = new GosperGun(width, height, G);
-        Gun.introducegun(G.map,20,30);
-        Gun.introducegun(G.map,65,10);
+        //Gun.introducegun(G.map,20,30);
+        //Gun.introducegun(G.map,65,10);
 //        for (int i = 0; i < width; i++)
 //            for (int j = 0;j < height; j++)
 //                if (G.map[i][j] == 20)

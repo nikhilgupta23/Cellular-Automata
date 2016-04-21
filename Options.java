@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication3;
+package se;
 
 import java.awt.event.WindowEvent;
 
@@ -26,7 +26,7 @@ public class Options extends javax.swing.JFrame {
         initComponents();
         jLabel1.setVisible(false);
         jLabel2.setVisible(false);
-        
+
     }
 
     /**
@@ -119,18 +119,19 @@ public class Options extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         PlayGame PG = null;
+        D.closeDB();
         try {
-        PG = new PlayGame();
+        PG = new PlayGame(user);
         } catch(InterruptedException E) {}
         DgosperGun SG = new DgosperGun(PG.G, PG.width, PG.height, PG.J);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-             
+
         jLabel1.setText(user);
         jLabel2.setText(Integer.toString(D.viewHS(user)));
-        
+
         jLabel1.setVisible(true);
         jLabel2.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -140,10 +141,11 @@ public class Options extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        D.closeDB();
         this.setVisible(false);
         new Colors(this, user).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-     
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

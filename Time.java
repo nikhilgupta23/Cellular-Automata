@@ -16,7 +16,7 @@ import javax.swing.Timer;
 public class Time extends JComponent {
 
     public static int seconds = 100;
- 
+
     public Time()
     {
      //   this.setOpaque(false);

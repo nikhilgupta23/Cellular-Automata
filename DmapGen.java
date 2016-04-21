@@ -1,10 +1,7 @@
-package javaapplication3;
+package se;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -64,13 +61,13 @@ class DmapGen implements ActionListener {
         }
         W.repaint();
     }
-    
-public short[][] fillCaveWithWater(short map[][], int depth)
-{
+
+  public short[][] fillCaveWithWater(short map[][], int depth)
+  {
     int x, y;
     int lowestPoint = 0;
     AB: for (y = height - 1; y > 0; y--)
-        for (x = 0; x < width; x++)              
+        for (x = 0; x < width; x++)
             if (lowestPoint == 0 && map[y][x] == 1)
             {
                 lowestPoint = y;
@@ -83,20 +80,20 @@ public short[][] fillCaveWithWater(short map[][], int depth)
                     map[x][y] = 30;
             }
     return map;
-}
-    
-public short[][] addCaveWaterfalls(short map[][], int numWaterFalls)
-{
+  }
+
+  public short[][] addCaveWaterfalls(short map[][], int numWaterFalls)
+  {
     int x,y;
     Stack<Point> waterFallSpawns = new Stack<>();
     while (waterFallSpawns.size() < numWaterFalls)
-    {       
+    {
         x = (int)(Math.random()*width);
         y = (int)(Math.random()*height);
-        if (map[x][y] == 1 && y - 1 >= 0 && map[x][y-1] == 0)           
+        if (map[x][y] == 1 && y - 1 >= 0 && map[x][y-1] == 0)
         {
             waterFallSpawns.push(new Point(x, y));
-        }   
+        }
     }
     int i;
     Point waterfall;
@@ -112,18 +109,18 @@ public short[][] addCaveWaterfalls(short map[][], int numWaterFalls)
         if (waterfall.x-1 >=0 && map[waterfall.x - 1][waterfall.y] == 1)
         {
             waterFallSpawns.push(new Point(waterfall.x -1, waterfall.y));
-            
+
         }
         if (waterfall.x+1 < width && map[waterfall.x + 1][waterfall.y] == 1)
         {
-            waterFallSpawns.push(new Point(waterfall.x + 1, waterfall.y));            
+            waterFallSpawns.push(new Point(waterfall.x + 1, waterfall.y));
         }
     }
     return map;
-}
+  }
 
-public  short[][] simulateWaterfalls(short map[][])
-{
+  public  short[][] simulateWaterfalls(short map[][])
+  {
     Stack<Point> stack= new Stack<>();
     for(int p=0;p<width;p++)
     {
@@ -154,14 +151,14 @@ public  short[][] simulateWaterfalls(short map[][])
         if (waterfall.x -1 >=0 && map[waterfall.x - 1][waterfall.y] == 1)
         {
             stack.push(new Point(waterfall.x -1, waterfall.y));
-            
+
         }
         if (waterfall.x + 1<width && map[waterfall.x + 1][waterfall.y] == 1)
         {
-            stack.push(new Point(waterfall.x + 1, waterfall.y));            
+            stack.push(new Point(waterfall.x + 1, waterfall.y));
         }
     }
     return map;
-}
-    
-}
+  }
+
+  }

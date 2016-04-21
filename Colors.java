@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication3;
+package se;
 
 import javax.swing.JFrame;
 
@@ -170,8 +170,11 @@ public class Colors extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         DB db=new DB();
+        db.connDB();
         //CHANGE IT
-        db.updateColor(user, buttonGroup2.getSelection().getMnemonic() , buttonGroup1.getSelection().getMnemonic());
+        System.out.println(buttonGroup2.getSelection().getMnemonic() + " " +buttonGroup1.getSelection().getMnemonic());
+        db.updateColor(user, buttonGroup2.getSelection().getMnemonic()-48 , buttonGroup1.getSelection().getMnemonic()-48);
+        db.closeDB();
         this.setVisible(false);
         options.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed

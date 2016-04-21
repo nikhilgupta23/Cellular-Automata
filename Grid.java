@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication3;
+package se;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,12 +23,14 @@ class Grid extends JPanel implements KeyListener, ActionListener {
     Timer timer;
     int bullI, bullJ;
     int charposrow = 1,charposcol = 1;
-    Color cave;
-    Color ch;
+    Color cave = Color.BLACK;
+    Color ch = Color.blue;
     int width, height;
     int lives = 3;
     JFrame W;
     int noOfTreasure = 0;
+    DgosperGun Dg;
+    DeadFrame D;
 
     Grid(short map[][], int width, int height, JFrame W)
     {
@@ -39,16 +41,49 @@ class Grid extends JPanel implements KeyListener, ActionListener {
       Initialise();
     }
 
-    Grid (short map[][], short caveColor, short charColor)
+    void assignDF(DeadFrame D)
     {
-        this.map=map;
-        Initialise();
-        initialiseC(caveColor, charColor);
+        this.D = D;
     }
 
-    void initialiseC(short caveColor, short charColor)
+    void chngDefaultC(short caveColor, short charColor)
     {
-
+        switch (caveColor)
+        {
+            case 0:
+                cave = Color.black;
+                break;
+            case 1:
+                cave = Color.red;
+                break;
+            case 2:
+                cave = Color.blue;
+                break;
+            case 3:
+                cave = Color.green;
+                break;
+            case 4:
+                cave = Color.black;
+                break;
+        }
+        switch (charColor)
+        {
+            case 0:
+                ch = Color.black;
+                break;
+            case 1:
+                ch = Color.red;
+                break;
+            case 2:
+                ch = Color.blue;
+                break;
+            case 3:
+                ch = Color.green;
+                break;
+            case 4:
+                ch = Color.black;
+                break;
+        }
     }
 
     void Initialise()
@@ -58,32 +93,30 @@ class Grid extends JPanel implements KeyListener, ActionListener {
       this.requestFocus();
       this.addKeyListener(this);
       timer = new Timer(0, this);
-      timer.setDelay(200);
+      timer.setDelay(40);
       map[charposcol][charposrow] = 2;
+      Dg = new DgosperGun(this, width, height, W);
     }
 
     boolean chkValidity()
     {
         try {
-            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow]==20)
+            if(map[charposcol][charposrow]==0 || map[charposcol][charposrow] == 20)
             {   lives--;
                 System.out.println(lives);
                 if (lives <= 0)
                 {
                     float time = (float) 1.5;
-                    DeadFrame DF;
-                    if (time == 0)
-                        DF = new DeadFrame(noOfTreasure);
-                    DF = new DeadFrame(noOfTreasure*time);
+                    D.Score(noOfTreasure*10);
                     W.setVisible(false);
                 }
                 return false;
             }
             if (map[charposcol][charposrow] == 5)
                 noOfTreasure++;
-            } catch(Exception E)
-            {return false; }
-            return !(charposrow == width+1 || charposcol == height+1);
+            } catch(ArrayIndexOutOfBoundsException E)
+            {   return false; }
+            return !(charposrow == height+1 || charposcol == width+1);
     }
 
     int lastKeyPress;
@@ -181,10 +214,30 @@ class Grid extends JPanel implements KeyListener, ActionListener {
     }
     void Boom()
     {
-        try {
         switch (dir) {
             case 0:
                 bullI--;
+                break;
+            case 1:
+                bullI++;
+                break;
+            case 2:
+                bullJ++;
+                break;
+            case 3:
+                bullJ--;
+                break;
+            default:
+                break;
+        }
+
+        if (width > (36+bullI) && height > (8+bullJ))
+            Dg.Gun.introducegun(map, bullI, bullJ);
+        else {
+        try {
+        switch (dir) {
+            case 0:
+                //bullI--;
                 if (map[bullI][bullJ] == 0)
                 {
                     map[bullI][bullJ] = 1;
@@ -204,7 +257,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 }   repaint();
                 break;
             case 1:
-                bullI++;
+                //bullI++;
                 if (map[bullI][bullJ] == 0)
                 {
                     map[bullI][bullJ] = 1;
@@ -224,7 +277,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 }   repaint();
                 break;
             case 2:
-                bullJ++;
+                //bullJ++;
                 if (map[bullI][bullJ] == 0)
                 {
                     map[bullI][bullJ] = 1;
@@ -244,7 +297,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 }   repaint();
                 break;
             case 3:
-                bullJ--;
+                //bullJ--;
                 if (map[bullI][bullJ] == 0)
                 {
                     map[bullI][bullJ] = 1;
@@ -268,6 +321,19 @@ class Grid extends JPanel implements KeyListener, ActionListener {
         }
         } catch (ArrayIndexOutOfBoundsException E)
         {}
+        }
+    }
+
+    void remove15()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if(map[i][j] == 15)
+                    map[i][j] = 1;
+            }
+        }
     }
 
     @Override
@@ -278,27 +344,25 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             case 0:
                 if (bullI < 0)
                 {   timer.stop();
-                map[bullI+2][bullJ] = 1;
+                    remove15();
+                    map[charposcol][charposrow] = 2;
+                    map[bullI+1][bullJ] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 5)
-                {
-                    map[bullI][bullJ] = 5;
-                     bullI -= 2;
-                }
-                else if (map[bullI][bullJ] == 0 || map[bullI+1][bullJ] == 0)
+                if (map[bullI][bullJ] == 0)
                 {
                     timer.stop();
-                    bullI += 2;
+                    bullI++;
+                    remove15();
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
                 else
                 {
                     map[bullI][bullJ] = 15;
-                    if (map[bullI+2][bullJ] == 15)
-                        map[bullI+2][bullJ] = 1;
-                    bullI -= 2;
+                    if (map[bullI+1][bullJ] == 15)
+                        map[bullI+1][bullJ] = 1;
+                    bullI --;
                 }
                 map[charposcol][charposrow] = 2;
                 repaint();
@@ -306,28 +370,25 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             case 1:
                 if (bullI > width)
                 {   timer.stop();
-                map[bullI-2][bullJ] = 1;
+                remove15();
+                map[charposcol][charposrow] = 2;
+                map[bullI-1][bullJ] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 5)
-                {
-                    map[bullI][bullJ] = 5;
-                     bullI += 2;
-                }
-                else if (map[bullI][bullJ] == 0 || map[bullI-1][bullJ] == 0)
+                else if (map[bullI][bullJ] == 0)
                 {
                     timer.stop();
-                    bullI -= 2;
+                    bullI --;
+                    remove15();
                     map[bullI][bullJ] = 1;
-                    System.out.println("Boom");
                     Boom();
                 }
                 else
                 {
                     map[bullI][bullJ] = 15;
-                    if (map[bullI-2][bullJ] == 15)
-                        map[bullI-2][bullJ] = 1;
-                    bullI += 2;
+                    if (map[bullI-1][bullJ] == 15)
+                        map[bullI-1][bullJ] = 1;
+                    bullI++;
                 }
                 map[charposcol][charposrow] = 2;
                 repaint();
@@ -335,27 +396,25 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             case 2:
                 if (bullJ > height)
                 {   timer.stop();
-                map[bullI][bullJ-2] = 1;
+                remove15();
+                map[charposcol][charposrow] = 2;
+                map[bullI][bullJ-1] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 5)
-                {
-                    map[bullI][bullJ] = 5;
-                     bullJ += 2;
-                }
-                else if (map[bullI][bullJ] == 0 || map[bullI][bullJ-1] == 0)
+                else if (map[bullI][bullJ] == 0)
                 {
                     timer.stop();
                     bullJ -= 2;
+                    remove15();
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
                 else
                 {
                     map[bullI][bullJ] = 15;
-                    if (map[bullI][bullJ-2] == 15)
-                        map[bullI][bullJ-2] = 1;
-                    bullJ += 2;
+                    if (map[bullI][bullJ-1] == 15)
+                        map[bullI][bullJ-1] = 1;
+                    bullJ++;
                 }
                 map[charposcol][charposrow] = 2;
                 repaint();
@@ -363,27 +422,25 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             case 3:
                 if (bullJ < 0)
                 {   timer.stop();
+                remove15();
+                map[charposcol][charposrow] = 2;
                 map[bullI][bullJ+2] = 1;
                 return;
                 }
-                if (map[bullI][bullJ] == 5)
-                {
-                    map[bullI][bullJ] = 5;
-                     bullJ -= 2;
-                }
-                else if (map[bullI][bullJ] == 0 || map[bullI][bullJ+1] == 0 )
+                else if (map[bullI][bullJ] == 0)
                 {
                     timer.stop();
-                    bullJ += 2;
+                    bullJ++;
+                    remove15();
                     map[bullI][bullJ] = 1;
                     Boom();
                 }
                 else
                 {
                     map[bullI][bullJ] = 15;
-                    if (map[bullI][bullJ+2] == 15)
-                        map[bullI][bullJ+2] = 1;
-                    bullJ -= 2;
+                    if (map[bullI][bullJ+1] == 15)
+                        map[bullI][bullJ+1] = 1;
+                    bullJ--;
                 }
                 map[charposcol][charposrow] = 2;
                 repaint();
@@ -391,7 +448,10 @@ class Grid extends JPanel implements KeyListener, ActionListener {
             default:
                 break;
         }
-        } catch (ArrayIndexOutOfBoundsException E) {timer.stop();}
+        } catch (ArrayIndexOutOfBoundsException E)
+        {   timer.stop();
+            map[charposcol][charposrow] = 2;
+        }
     }
 
 
@@ -413,7 +473,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                         g.setColor(Color.white);
                         break;
                     case 0:
-                        g.setColor(Color.black);
+                        g.setColor(cave);
                         break;
                     case 10:
                         g.setColor(Color.red);
@@ -431,15 +491,18 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                         g.setColor(Color.GREEN);
                         break;
                     default:
-                        g.setColor(Color.blue);
+                        g.setColor(ch);
                         break;
                 }
-                g.fillRect(i/2, j/2, 10, 10);
+                g.fillRect(i, j, 10, 10);
             }
         }
-        g.setColor(Color.blue);
-        g.setFont(new Font("TimesRoman", Font.BOLD, 20)); 
+        g.setColor(Color.ORANGE);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 20));
         String str = "Time Left: "+Time.seconds ;
         g.drawString(str, 1000, 20);
+        g.setColor(Color.MAGENTA);
+        str = "Lives left: "+lives;
+        g.drawString(str, 1002, 40);
     }
 }
