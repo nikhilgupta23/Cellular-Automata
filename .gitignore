@@ -1,4 +1,8 @@
 *.*
 !*.java
 !*.form
+!*.jpg
+!*.jpeg
+!*.gif
+!*.png
 !.gitignore
