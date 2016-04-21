@@ -102,20 +102,23 @@ short[][] doSmoothSimulationStep(short[][] oldMap){
 }
 
 
-void placeTreasure(short[][] map){
+short[][] placeTreasure(short[][] map){
     //How hidden does a spot need to be for treasure?
     //I find 5 or 6 is good. 6 for very rare treasure.
-    int treasureHiddenLimit = 5;
+    int treasureHiddenLimit = 4;
     for (int x=0; x < width; x++){
         for (int y=0; y < height; y++){
             if(map[x][y] == 0){
                 int nbs = countAliveNeighbours(map, x, y);
+                //System.out.println(nbs);
                 if(nbs >= treasureHiddenLimit){
+                    //System.out.println("Changed");
                     map[x][y] = 5;
                 }
             }
         }
     }
+    return map;
 }
 
     //Returns the number of cells in a ring around (x,y) that are alive.

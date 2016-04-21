@@ -44,8 +44,7 @@ class DgosperGun implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
             G.map = Gun.doSimulationStepGun(G.map);
-            DmapGen dmg=new DmapGen(width,height,W);
-            G.map = dmg.simulateWaterfalls(G.map);
+            //System.out.println("Here");
             W.repaint();
     }
 }

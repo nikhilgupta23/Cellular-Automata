@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,46 +20,54 @@ import javax.swing.JPanel;
  * @author acer
  */
 public class DeadFrame {
-    JFrame f;
+    JFrame f, W;
     String U;
     int score;
-    DeadFrame(String user)
+    //JButton JB = new JButton("View Flood Fill");
+    DB db;
+    DeadFrame(String user)    
     {
         f = new JFrame();
-        f.add(new JLabel(new ImageIcon("D:/Images/4.gif")));
+        f.add(new JLabel(new ImageIcon("D:/Images/2.jpeg")));
         f.setSize(1366,768);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         U = user;
     }
-
-    void assignFFmap(short map[][])
+    
+    void Score(int s, JFrame W)
     {
-
-    }
-
-    void Score(int s)
-    {
-        Disp D = new Disp();
         this.score = s;
+        this.W = W;
+    }
+    
+    void screenF()
+    {
+        W.setVisible(false);
+        Disp D = new Disp();
         f.add(D);
-        DB db = new DB();
+        db = new DB();
         db.connDB();
         f.setVisible(true);
-        if (db.viewHS(U) < s)
-        {   db.updateHS(U, s);
+        if (db.viewHS(U) < score)
+        {   db.updateHS(U, score);
             JOptionPane.showMessageDialog(null, "Congratulations! New High Score :DD");
         }
+        else 
+        {
+            JOptionPane.showMessageDialog(null, "Move on?");
+            D.setVisible(false);
+            Options O = new Options(U);
+        }
     }
-
+    
     class Disp extends JPanel {
         @Override
         public void paint(Graphics g) {
             g.setColor(Color.blue);
-            g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+            g.setFont(new Font("TimesRoman", Font.BOLD, 30)); 
             String str = "Well, you're dead. You might as well \n know how much "
                     + "you scored: "+score;
-            g.drawString(str, 150, 50);
-
+            g.drawString(str, 150, 50);  
         }
     }
 }
