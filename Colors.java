@@ -6,6 +6,7 @@
 package se;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -67,7 +68,7 @@ public class Colors extends javax.swing.JFrame {
 
         buttonGroup2.add(jRadioButton3);
         jRadioButton3.setMnemonic('2');
-        jRadioButton3.setText("Blue");
+        jRadioButton3.setText("Pink");
         jRadioButton3.setName("2"); // NOI18N
 
         buttonGroup2.add(jRadioButton4);
@@ -85,7 +86,7 @@ public class Colors extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton6);
         jRadioButton6.setMnemonic('2');
         jRadioButton6.setSelected(true);
-        jRadioButton6.setText("Blue");
+        jRadioButton6.setText("Pink");
         jRadioButton6.setName("2"); // NOI18N
 
         buttonGroup1.add(jRadioButton7);
@@ -173,10 +174,15 @@ public class Colors extends javax.swing.JFrame {
         db.connDB();
         //CHANGE IT
         System.out.println(buttonGroup2.getSelection().getMnemonic() + " " +buttonGroup1.getSelection().getMnemonic());
-        db.updateColor(user, buttonGroup2.getSelection().getMnemonic()-48 , buttonGroup1.getSelection().getMnemonic()-48);
-        db.closeDB();
-        this.setVisible(false);
-        options.setVisible(true);
+        if(buttonGroup2.getSelection().getMnemonic() == buttonGroup1.getSelection().getMnemonic())
+            JOptionPane.showMessageDialog(null, "Character Color and Cave Color cannot be same.");
+        else
+            {
+                db.updateColor(user, buttonGroup2.getSelection().getMnemonic()-48 , buttonGroup1.getSelection().getMnemonic()-48);      
+                db.closeDB();
+                this.setVisible(false);
+                options.setVisible(true);
+            }    
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

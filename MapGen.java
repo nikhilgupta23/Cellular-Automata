@@ -48,8 +48,6 @@ class MapGen {
         for(int y=0; y<oldMap[0].length; y++){
             if(oldMap[x][y]==2) {newMap[x][y]=2;continue;}
             int nbs = countAliveNeighbours(oldMap, x, y);
-            //The new value is based on our simulation rules
-            //First, if a cell is alive but has too few neighbours, kill it.
             if(oldMap[x][y] == 1){
                 if(nbs < 3){
                     newMap[x][y] = 0;
@@ -57,7 +55,7 @@ class MapGen {
                 else{
                     newMap[x][y] = 1;
                 }
-            } //Otherwise, if the cell is dead now, check if it has the right number of neighbours to be 'born'
+            } 
             else if(oldMap[x][y] == 0){
                 if(nbs > 4){
                     newMap[x][y] = 1;

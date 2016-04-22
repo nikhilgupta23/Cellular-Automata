@@ -20,6 +20,7 @@ Timer t;
 
     FloodFill() {
         this.t = new Timer(0, this);
+        t.setDelay(1000);
     }
 
     @Override

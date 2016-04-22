@@ -130,6 +130,7 @@ public class Options extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
              
         jLabel1.setText(user);
+        //if (D.viewHS(user) )
         jLabel2.setText(Integer.toString(D.viewHS(user)));
         
         jLabel1.setVisible(true);

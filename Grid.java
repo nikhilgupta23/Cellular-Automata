@@ -59,7 +59,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 cave = Color.red;
                 break;
             case 2:
-                cave = Color.blue;
+                cave = Color.pink;
                 break;
             case 3:
                 cave = Color.green;
@@ -77,7 +77,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 ch = Color.red;
                 break;
             case 2:
-                ch = Color.blue;
+                ch = Color.pink;
                 break;
             case 3:
                 ch = Color.green;
@@ -132,28 +132,24 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 case KeyEvent.VK_LEFT:
                     charposcol--;
                     lastKeyPress = e.getKeyCode();
-                    System.out.println("VK_LEFT pressed");
                     if (!chkValidity())
                         charposcol++;
                     break;
                 case KeyEvent.VK_RIGHT:
                     charposcol++;
                     lastKeyPress = e.getKeyCode();
-                    System.out.println("VK_RIGHT pressed");
                     if (!chkValidity())
                         charposcol--;
                     break;
                 case KeyEvent.VK_UP:
                     charposrow--;
                     lastKeyPress = e.getKeyCode();
-                    System.out.println("VK_UP pressed");
                     if (!chkValidity())
                         charposrow++;
                     break;
                 case KeyEvent.VK_DOWN:
                     charposrow++;
                     lastKeyPress = e.getKeyCode();
-                    System.out.println("VK_DOWN pressed"+charposrow);
                     if (!chkValidity())
                         charposrow--;
                     break;
@@ -390,7 +386,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 repaint();
                 break;
             case 1:
-                if (bullI > width)
+                if (bullI >= width)
                 {   timer.stop();
                 remove15();
                 map[charposcol][charposrow] = 2;
@@ -416,7 +412,7 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                 repaint();
                 break;
             case 2:
-                if (bullJ > height)
+                if (bullJ >= height)
                 {   timer.stop();
                 remove15();
                 map[charposcol][charposrow] = 2;
@@ -508,6 +504,9 @@ class Grid extends JPanel implements KeyListener, ActionListener {
                         break;
                     case 15:
                         g.setColor(Color.DARK_GRAY);
+                        break;
+                    case 30:
+                        g.setColor(Color.blue);
                         break;
                     default:
                         g.setColor(ch);

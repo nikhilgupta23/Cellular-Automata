@@ -120,9 +120,6 @@ class GosperGun {
                 if(nbs == 3){
                     newMap[x][y] = 20;
                 }
-                else{
-                    newMap[x][y] = newMap[x][y];
-                }
             }
         }
     }

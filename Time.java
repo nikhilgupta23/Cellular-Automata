@@ -15,7 +15,7 @@ import javax.swing.Timer;
  */
 public class Time extends JComponent {
 
-    public static int seconds = 30;
+    public static int seconds = 500;
     DeadFrame D;
     int score;
     //JFrame W;
@@ -33,8 +33,9 @@ public class Time extends JComponent {
     public Time()
     {
      //   this.setOpaque(false);
-        Timer timer = new Timer(30000, (ActionEvent evt) -> {
-            JOptionPane.showMessageDialog(null, "BooHoo. Time's up.");
+        Timer timer = new Timer(500000, (ActionEvent evt) -> {
+            //JOptionPane.showMessageDialog(null, "BooHoo. Time's up.");
+          //  timer.stop();
             //seconds=100;
             D.screenF();
         });

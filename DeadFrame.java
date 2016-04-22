@@ -28,7 +28,9 @@ public class DeadFrame {
     DeadFrame(String user)    
     {
         f = new JFrame();
-        f.add(new JLabel(new ImageIcon("D:/Images/2.jpeg")));
+        JPanel jPanel=new JPanel();
+        jPanel.add(new JLabel(new ImageIcon("2.jpg")));
+        f.add(jPanel);
         f.setSize(1366,768);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         U = user;
@@ -51,12 +53,14 @@ public class DeadFrame {
         if (db.viewHS(U) < score)
         {   db.updateHS(U, score);
             JOptionPane.showMessageDialog(null, "Congratulations! New High Score :DD");
+            db.closeDB();
         }
         else 
         {
             JOptionPane.showMessageDialog(null, "Move on?");
-            D.setVisible(false);
+            f.setVisible(false);
             Options O = new Options(U);
+            db.closeDB();
         }
     }
     
@@ -65,8 +69,7 @@ public class DeadFrame {
         public void paint(Graphics g) {
             g.setColor(Color.blue);
             g.setFont(new Font("TimesRoman", Font.BOLD, 30)); 
-            String str = "Well, you're dead. You might as well \n know how much "
-                    + "you scored: "+score;
+            String str = "You're DEAD\n\n Score:"+score;
             g.drawString(str, 150, 50);  
         }
     }
